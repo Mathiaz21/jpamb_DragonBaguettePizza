@@ -51,20 +51,37 @@ else:
     print("Could not find method")
     sys.exit(-1)
 
+##########################################################
+
+######### ANALYSIS OF THE METHOD INSTR BY INSTR ##########
+
+##########################################################
+
+simulated_stack = []
+
+# TODO  : write a function that detects divisions by zero and by n
+# Using the simulated_stack
+
+
+
+
 l.debug("trying to find an assertion error being created")
 # Look if the method contains an assertion error:
 for inst in m["code"]["bytecode"]:
+
     if (
+
         inst["opr"] == "invoke"
         and inst["method"]["ref"]["name"] == "java/lang/AssertionError"
     ):
-        break
-else:
-    # I'm pretty sure the answer is no
-    l.debug("did not find it")
-    print("assertion error;20%")
-    sys.exit(0)
 
-l.debug("Found it")
-# I'm kind of sure the answer is yes.
-print("assertion error;80%")
+        l.debug("Found an assertion error")
+        print("assertion error;80%")
+        
+    else:
+
+        l.debug("Did not find an assertion error")
+        print("assertion error;20%")
+        sys.exit(0)
+
+

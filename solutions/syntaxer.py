@@ -32,6 +32,37 @@ srcfile = (Path("src/main/java") / i["class_name"].replace(".", "/")).with_suffi
 import tree_sitter
 import tree_sitter_java
 
+def getAssertProbability(query,node,probability=1) -> int:
+    for node, t in query.captures(node).items():
+        if node == "assert":
+            return 70
+    else:
+        return 20
+
+def getDivisionByZeroProbability(query,node,probability=1) -> int:
+    for t,node in query.captures(node).items():
+        if t == "division":
+            if node[0].child_by_field_name("right").text.decode() == "0":
+                return 80 * probability;
+            else:
+                return 15 * probability;
+    else:
+        return 1;
+
+def getArrayAccessProbability(query,node,probability=1) -> int:
+    for t,node in query.captures(node).items():
+        if t == "arr":
+            return 60
+    else:
+        return 1
+
+def getInfiniteLoopProbability(query,node,probability=1) -> int:
+    for t,node in query.captures(node).items():
+        if t == "ex":
+            return 60
+    else:
+        return 1
+
 JAVA_LANGUAGE = tree_sitter.Language(tree_sitter_java.language())
 parser = tree_sitter.Parser(JAVA_LANGUAGE)
 
@@ -94,16 +125,51 @@ assert body and body.text
 for t in body.text.splitlines():
     l.debug("line: %s", t.decode())
 
-assert_q = JAVA_LANGUAGE.query(f"""(assert_statement) @assert""")
 
-for node, t in assert_q.captures(body).items():
-    if node == "assert":
-        break
-else:
-    l.debug("Did not find any assertions")
-    print("assertion error;20%")
-    sys.exit(0)
+
+
+
 
 l.debug("Found assertion")
-print("assertion error;80%")
+
+################## ASSERTION ##################
+assert_q = JAVA_LANGUAGE.query(f"""(assert_statement) @assert""")
+assertChances = getAssertProbability(assert_q,node)
+print("assertion error;" + str(assertChances) + "%")
+#####################################################
+
+################## DIVSION BY ZERO ##################
+divisionByZero_q = JAVA_LANGUAGE.query(f"""(binary_expression operator:"/") @division""")
+divisionByZeroChances = getDivisionByZeroProbability(divisionByZero_q,node)
+print("divide by zero;" + str(divisionByZeroChances) + "%")
+#####################################################
+
+################## ARRAY OUT OF BOUND ##################
+arrayOutOfBound_q = JAVA_LANGUAGE.query(f"""(array_access) @arr""")
+arrayOutOfBoundChances = getArrayAccessProbability(arrayOutOfBound_q,node)
+print("out of bounds;" + str(arrayOutOfBoundChances) + "%")
+#######################################################
+
+################## ARRAY OUT OF BOUND ##################
+infiniteLoop_q = JAVA_LANGUAGE.query(f"""(while_statement)@ex""")
+infiniteLoopChances = getInfiniteLoopProbability(infiniteLoop_q,node)
+print("*;" + str(infiniteLoopChances) + "%")
+#######################################################
+
+################## OKAY ###############################
+# okayChances = 150 - (assertChances + divisionByZeroChances + arrayOutOfBoundChances + infiniteLoopChances)
+# print("ok;" + str(okayChances) + "%")
+#######################################################
+
 sys.exit(0)
+
+# # def enterIfScope(if_block, probability=100):
+
+# def searchForIfStatemements(probability=100):
+
+#     print("If detection called")
+#     if_query = JAVA_LANGUAGE.query(f"""(if_statement)""")
+#     print("If detected")
+#     print(if_query)
+
+# searchForIfStatemements()

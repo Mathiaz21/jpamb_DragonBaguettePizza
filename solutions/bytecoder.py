@@ -57,31 +57,66 @@ else:
 
 ##########################################################
 
-simulated_stack = []
+
 
 # TODO  : write a function that detects divisions by zero and by n
 # Using the simulated_stack
 
+def evaluate_div_by_zero_probability(div_zero_probability = 0):
+
+    simulated_stack = []
+    l.debug("Trying to find a division operator")
+    for instr in m["code"]["bytecode"]:
+
+        if instr["opr"] == "push" :
+
+            simulated_stack.append(instr["value"])
+        if instr["opr"] == 'load':
+
+            simulated_stack.append(instr["type"])
+
+        if instr["opr"] == "binary":
+            if instr["operant"] == "div":
+
+                l.debug("Division instruction found")
+                l.debug(simulated_stack)
+                if 'value' in simulated_stack[-1]:
+
+                    if simulated_stack[-1]["value"] == 0:
+
+                        l.debug("Division by zero found")
+                        div_zero_probability = 1
+                else:
+
+                    l.debug("No defined dividend")
+                    div_zero_probability = (1 + 3*div_zero_probability) / 4
+                    
+    print(f"divide by 0;{div_zero_probability * 100}%")
 
 
 
-l.debug("trying to find an assertion error being created")
-# Look if the method contains an assertion error:
-for inst in m["code"]["bytecode"]:
+evaluate_div_by_zero_probability()
 
-    if (
 
-        inst["opr"] == "invoke"
-        and inst["method"]["ref"]["name"] == "java/lang/AssertionError"
-    ):
 
-        l.debug("Found an assertion error")
-        print("assertion error;80%")
+
+# l.debug("trying to find an assertion error being created")
+# # Look if the method contains an assertion error:
+# for inst in m["code"]["bytecode"]:
+
+#     if (
+
+#         inst["opr"] == "invoke"
+#         and inst["method"]["ref"]["name"] == "java/lang/AssertionError"
+#     ):
+
+#         l.debug("Found an assertion error")
+#         print("assertion error;80%")
         
-    else:
+#     else:
 
-        l.debug("Did not find an assertion error")
-        print("assertion error;20%")
-        sys.exit(0)
+#         l.debug("Did not find an assertion error")
+#         print("assertion error;20%")
+#         sys.exit(0)
 
 

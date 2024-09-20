@@ -3,6 +3,7 @@
 """
 
 import sys, logging
+from jbinary import jbinary
 
 l = logging
 l.basicConfig(level=logging.DEBUG)
@@ -62,40 +63,89 @@ else:
 # TODO  : write a function that detects divisions by zero and by n
 # Using the simulated_stack
 
-def evaluate_div_by_zero_probability(div_zero_probability = 0):
+probabilities = {
+    "div_by_0": 0,
+    "assertion_error": 0,
+    "array_out_of_bounds": 0,
+    "infinite_loop": 0,
+    "ok_non_error": 0
+}
+
+
+def print_probabilities(probabilities):
+
+    print(f"divide by 0;{probabilities['div_by_zero'] * 100}%")
+    print(f"assertion error;{probabilities['assertion_error'] * 100}%")
+    print(f"array out of bounds;{probabilities['array_out_of_bounds'] * 100}%")
+    print(f"*;{probabilities['infinite_loop'] * 100}%")
+    print(f"ok;{probabilities['ok_non_error'] * 100}%")
+
+
+def evaluate_probabilities(probabilities):
 
     simulated_stack = []
     l.debug("Trying to find a division operator")
-    for instr in m["code"]["bytecode"]:
+    for instruction in m[jbinary.CODE][jbinary.BYTECODE]:
 
-        if instr["opr"] == "push" :
-
-            simulated_stack.append(instr["value"])
-        if instr["opr"] == 'load':
-
-            simulated_stack.append(instr["type"])
-
-        if instr["opr"] == "binary":
-            if instr["operant"] == "div":
-
-                l.debug("Division instruction found")
-                l.debug(simulated_stack)
-                if 'value' in simulated_stack[-1]:
-
-                    if simulated_stack[-1]["value"] == 0:
-
-                        l.debug("Division by zero found")
-                        div_zero_probability = 1
-                else:
-
-                    l.debug("No defined dividend")
-                    div_zero_probability = (1 + 3*div_zero_probability) / 4
+        treat_instruction(instruction, simulated_stack)
                     
-    print(f"divide by 0;{div_zero_probability * 100}%")
+    
 
 
 
-evaluate_div_by_zero_probability()
+def treat_instruction(instruction, simulated_stack):
+    match instruction[jbinary.OPERATION]:
+        case jbinary.PUSH:
+            treat_push(instruction, simulated_stack)
+        case jbinary.LOAD:
+            treat_load(instruction, simulated_stack)
+        case jbinary.BINARY_EXPR:
+            treat_operator(instruction, simulated_stack)
+
+
+def treat_push(instruction, simulated_stack):
+
+    simulated_stack.append(instruction["value"])    
+
+
+
+def treat_load(instruction, simulated_stack):
+
+    simulated_stack.append(instr["type"])
+
+    
+
+def treat_operator(instruction, simulated_stack):
+
+    if instruction["operant"] == "div":
+
+            treat_division(instruction, simulated_stack)
+
+
+
+def treat_division(instruction, simulated_stack):
+    l.debug("Division instruction found")
+    l.debug(simulated_stack)
+    if 'value' in simulated_stack[-1]:
+
+        if simulated_stack[-1]["value"] == 0:
+
+            l.debug("Division by zero found")
+            probabilities["div_by_zero"] = 1
+    else:
+
+        l.debug("No defined dividend")
+        probabilities["div_by_zero"] = (1 + 3*probabilities["div_by_zero"]) / 4
+
+
+##########################################################
+
+################## CALLING THE FUNCTION ##################
+
+##########################################################
+
+evaluate_probabilities(probabilities)
+print_probabilities(probabilities)
 
 
 

@@ -70,28 +70,16 @@ def evaluate_probabilities(probabilities):
 
         treat_instruction(instruction, simulated_stack)
                     
-    
-
-
-
 def treat_instruction(instruction, simulated_stack):
-
     match instruction[jbinary.OPERATION]:
-
         case jbinary.PUSH:
-
             treat_push(instruction, simulated_stack)
         case jbinary.LOAD:
-
             treat_load(instruction, simulated_stack)
         case jbinary.BINARY_EXPR:
-
             treat_binary_operator(instruction, simulated_stack)
         case jbinary.INVOKE:
-
-            treat_invoke_operator(instruction, simulated_stack)    
-
-
+            treat_invoke_operator(instruction, simulated_stack)
 
 def treat_push(instruction, simulated_stack):
 
@@ -136,7 +124,6 @@ def treat_division(instruction, simulated_stack):
 
 
 def treat_assertion(instruction, simulated_stack):
-
     l.debug("Found an assertion call")
 
 

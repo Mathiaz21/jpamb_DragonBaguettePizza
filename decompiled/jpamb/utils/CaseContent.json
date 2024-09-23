@@ -38,7 +38,7 @@
                   }
                 ],
                 "is_interface": false,
-                "name": "lambda$toString$0",
+                "name": "toInputString",
                 "ref": {
                   "kind": "class",
                   "name": "jpamb/utils/CaseContent"
@@ -168,7 +168,7 @@
         "args": [
           {
             "type": "string",
-            "value": "Invalid parameter: \u0001 // unexpected \u0001"
+            "value": "[I:\u0001"
           }
         ],
         "handle": {
@@ -220,7 +220,7 @@
         "args": [
           {
             "type": "string",
-            "value": "\u0001 is not a paramater list"
+            "value": "'\u0001'"
           }
         ],
         "handle": {
@@ -272,7 +272,7 @@
         "args": [
           {
             "type": "string",
-            "value": "Invalid case: \u0001"
+            "value": "[C:\u0001]"
           }
         ],
         "handle": {
@@ -320,6 +320,58 @@
     },
     {
       "index": 5,
+      "method": {
+        "args": [
+          {
+            "type": "string",
+            "value": "Invalid case: \u0001"
+          }
+        ],
+        "handle": {
+          "handletype": "method",
+          "kind": "static",
+          "method": {
+            "args": [
+              {
+                "kind": "class",
+                "name": "java/lang/invoke/MethodHandles$Lookup"
+              },
+              {
+                "kind": "class",
+                "name": "java/lang/String"
+              },
+              {
+                "kind": "class",
+                "name": "java/lang/invoke/MethodType"
+              },
+              {
+                "kind": "class",
+                "name": "java/lang/String"
+              },
+              {
+                "kind": "array",
+                "type": {
+                  "kind": "class",
+                  "name": "java/lang/Object"
+                }
+              }
+            ],
+            "is_interface": false,
+            "name": "makeConcatWithConstants",
+            "ref": {
+              "kind": "class",
+              "name": "java/lang/invoke/StringConcatFactory"
+            },
+            "returns": {
+              "kind": "class",
+              "name": "java/lang/invoke/CallSite"
+            }
+          }
+        }
+      }
+    },
+    {
+      "index": 6,
       "method": {
         "args": [
           {
@@ -457,21 +509,6 @@
         "name": "jpamb/utils/CaseContent"
       },
       "value": null
-    },
-    {
-      "access": [
-        "static"
-      ],
-      "annotations": [],
-      "name": "paramPattern",
-      "type": {
-        "annotations": [],
-        "args": [],
-        "inner": null,
-        "kind": "class",
-        "name": "java/util/regex/Pattern"
-      },
-      "value": null
     }
   ],
   "innerclasses": [
@@ -599,7 +636,7 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 12,
+            "line": 10,
             "offset": 0
           }
         ],
@@ -897,11 +934,11 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 17,
+            "line": 15,
             "offset": 0
           },
           {
-            "line": 19,
+            "line": 16,
             "offset": 8
           }
         ],
@@ -934,127 +971,64 @@
         "annotations": [],
         "bytecode": [
           {
-            "field": {
-              "class": "jpamb/utils/CaseContent",
-              "name": "paramPattern",
-              "type": {
-                "kind": "class",
-                "name": "java/util/regex/Pattern"
-              }
-            },
-            "offset": 0,
-            "opr": "get",
-            "static": true
-          },
-          {
             "index": 0,
-            "offset": 3,
+            "offset": 0,
             "opr": "load",
             "type": "ref"
           },
           {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/CharSequence"
-                }
-              ],
-              "name": "matcher",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/regex/Pattern"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/util/regex/Matcher"
-              }
-            },
-            "offset": 4,
-            "opr": "invoke"
-          },
-          {
-            "index": 1,
-            "offset": 7,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "index": 1,
-            "offset": 8,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "find",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/regex/Matcher"
-              },
-              "returns": "boolean"
-            },
-            "offset": 9,
-            "opr": "invoke"
+            "offset": 1,
+            "opr": "instanceof",
+            "type": {
+              "kind": "array",
+              "type": "int"
+            }
           },
           {
             "condition": "eq",
-            "offset": 12,
+            "offset": 4,
             "opr": "ifz",
-            "target": 80
+            "target": 10
           },
           {
-            "class": "java/util/ArrayList",
-            "offset": 15,
-            "opr": "new"
-          },
-          {
-            "offset": 18,
-            "opr": "dup",
-            "words": 1
-          },
-          {
-            "access": "special",
-            "method": {
-              "args": [],
-              "is_interface": false,
-              "name": "<init>",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/ArrayList"
-              },
-              "returns": null
-            },
-            "offset": 19,
-            "opr": "invoke"
-          },
-          {
-            "index": 2,
-            "offset": 22,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "class": "java/util/Scanner",
-            "offset": 23,
-            "opr": "new"
-          },
-          {
-            "offset": 26,
-            "opr": "dup",
-            "words": 1
-          },
-          {
-            "index": 1,
-            "offset": 27,
+            "index": 0,
+            "offset": 7,
             "opr": "load",
             "type": "ref"
           },
           {
-            "offset": 28,
+            "offset": 8,
+            "opr": "checkcast",
+            "type": {
+              "kind": "array",
+              "type": "int"
+            }
+          },
+          {
+            "access": "static",
+            "method": {
+              "args": [
+                {
+                  "kind": "array",
+                  "type": "int"
+                }
+              ],
+              "is_interface": false,
+              "name": "toString",
+              "ref": {
+                "kind": "class",
+                "name": "java/util/Arrays"
+              },
+              "returns": {
+                "kind": "class",
+                "name": "java/lang/String"
+              }
+            },
+            "offset": 11,
+            "opr": "invoke"
+          },
+          {
+            "offset": 14,
             "opr": "push",
             "value": {
               "type": "integer",
@@ -1067,21 +1041,22 @@
               "args": [
                 "int"
               ],
-              "name": "group",
+              "name": "substring",
               "ref": {
                 "kind": "class",
-                "name": "java/util/regex/Matcher"
+                "name": "java/lang/String"
               },
               "returns": {
                 "kind": "class",
                 "name": "java/lang/String"
               }
             },
-            "offset": 29,
+            "offset": 15,
             "opr": "invoke"
           },
           {
-            "access": "special",
+            "access": "dynamic",
+            "index": 2,
             "method": {
               "args": [
                 {
@@ -1089,85 +1064,270 @@
                   "name": "java/lang/String"
                 }
               ],
-              "is_interface": false,
-              "name": "<init>",
-              "ref": {
+              "name": "makeConcatWithConstants",
+              "returns": {
                 "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": null
+                "name": "java/lang/String"
+              }
             },
-            "offset": 32,
+            "offset": 18,
             "opr": "invoke"
           },
           {
-            "index": 3,
-            "offset": 35,
-            "opr": "store",
+            "offset": 23,
+            "opr": "return",
             "type": "ref"
           },
           {
-            "index": 3,
-            "offset": 36,
+            "index": 0,
+            "offset": 24,
             "opr": "load",
             "type": "ref"
           },
           {
-            "field": {
-              "class": "java/util/Locale",
-              "name": "US",
-              "type": {
-                "kind": "class",
-                "name": "java/util/Locale"
-              }
-            },
-            "offset": 37,
-            "opr": "get",
-            "static": true
+            "offset": 25,
+            "opr": "instanceof",
+            "type": {
+              "kind": "array",
+              "type": "char"
+            }
           },
           {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/util/Locale"
-                }
-              ],
-              "name": "useLocale",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              }
-            },
-            "offset": 40,
-            "opr": "invoke"
+            "condition": "eq",
+            "offset": 28,
+            "opr": "ifz",
+            "target": 44
           },
           {
-            "offset": 43,
-            "opr": "pop",
+            "class": "java/util/ArrayList",
+            "offset": 31,
+            "opr": "new"
+          },
+          {
+            "offset": 34,
+            "opr": "dup",
             "words": 1
           },
           {
-            "index": 3,
+            "access": "special",
+            "method": {
+              "args": [],
+              "is_interface": false,
+              "name": "<init>",
+              "ref": {
+                "kind": "class",
+                "name": "java/util/ArrayList"
+              },
+              "returns": null
+            },
+            "offset": 35,
+            "opr": "invoke"
+          },
+          {
+            "index": 1,
+            "offset": 38,
+            "opr": "store",
+            "type": "ref"
+          },
+          {
+            "index": 0,
+            "offset": 39,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "offset": 40,
+            "opr": "checkcast",
+            "type": {
+              "kind": "array",
+              "type": "char"
+            }
+          },
+          {
+            "index": 2,
+            "offset": 43,
+            "opr": "store",
+            "type": "ref"
+          },
+          {
+            "index": 2,
             "offset": 44,
             "opr": "load",
             "type": "ref"
           },
           {
             "offset": 45,
+            "opr": "arraylength"
+          },
+          {
+            "index": 3,
+            "offset": 46,
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "offset": 47,
             "opr": "push",
             "value": {
-              "type": "string",
-              "value": " *, *"
+              "type": "integer",
+              "value": 0
             }
           },
           {
-            "access": "virtual",
+            "index": 4,
+            "offset": 48,
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "index": 4,
+            "offset": 50,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "index": 3,
+            "offset": 52,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "condition": "ge",
+            "offset": 53,
+            "opr": "if",
+            "target": 39
+          },
+          {
+            "index": 2,
+            "offset": 56,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "index": 4,
+            "offset": 57,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "offset": 59,
+            "opr": "array_load",
+            "type": "char"
+          },
+          {
+            "index": 5,
+            "offset": 60,
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "index": 1,
+            "offset": 62,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "index": 5,
+            "offset": 63,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "access": "dynamic",
+            "index": 3,
+            "method": {
+              "args": [
+                "char"
+              ],
+              "name": "makeConcatWithConstants",
+              "returns": {
+                "kind": "class",
+                "name": "java/lang/String"
+              }
+            },
+            "offset": 65,
+            "opr": "invoke"
+          },
+          {
+            "access": "interface",
+            "method": {
+              "args": [
+                {
+                  "kind": "class",
+                  "name": "java/lang/Object"
+                }
+              ],
+              "name": "add",
+              "ref": {
+                "kind": "class",
+                "name": "java/util/List"
+              },
+              "returns": "boolean"
+            },
+            "offset": 70,
+            "opr": "invoke",
+            "stack_size": 2
+          },
+          {
+            "offset": 75,
+            "opr": "pop",
+            "words": 1
+          },
+          {
+            "amount": 1,
+            "index": 4,
+            "offset": 76,
+            "opr": "incr"
+          },
+          {
+            "offset": 79,
+            "opr": "goto",
+            "target": 25
+          },
+          {
+            "offset": 82,
+            "opr": "push",
+            "value": {
+              "type": "string",
+              "value": ", "
+            }
+          },
+          {
+            "index": 1,
+            "offset": 84,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "access": "static",
+            "method": {
+              "args": [
+                {
+                  "kind": "class",
+                  "name": "java/lang/CharSequence"
+                },
+                {
+                  "kind": "class",
+                  "name": "java/lang/Iterable"
+                }
+              ],
+              "is_interface": false,
+              "name": "join",
+              "ref": {
+                "kind": "class",
+                "name": "java/lang/String"
+              },
+              "returns": {
+                "kind": "class",
+                "name": "java/lang/String"
+              }
+            },
+            "offset": 85,
+            "opr": "invoke"
+          },
+          {
+            "access": "dynamic",
+            "index": 4,
             "method": {
               "args": [
                 {
@@ -1175,186 +1335,23 @@
                   "name": "java/lang/String"
                 }
               ],
-              "name": "useDelimiter",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
+              "name": "makeConcatWithConstants",
               "returns": {
                 "kind": "class",
-                "name": "java/util/Scanner"
+                "name": "java/lang/String"
               }
             },
-            "offset": 47,
-            "opr": "invoke"
-          },
-          {
-            "offset": 50,
-            "opr": "pop",
-            "words": 1
-          },
-          {
-            "index": 3,
-            "offset": 51,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "hasNext",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": "boolean"
-            },
-            "offset": 52,
-            "opr": "invoke"
-          },
-          {
-            "condition": "eq",
-            "offset": 55,
-            "opr": "ifz",
-            "target": 64
-          },
-          {
-            "index": 3,
-            "offset": 58,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "hasNextBoolean",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": "boolean"
-            },
-            "offset": 59,
-            "opr": "invoke"
-          },
-          {
-            "condition": "eq",
-            "offset": 62,
-            "opr": "ifz",
-            "target": 39
-          },
-          {
-            "index": 2,
-            "offset": 65,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 3,
-            "offset": 66,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "nextBoolean",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": "boolean"
-            },
-            "offset": 67,
-            "opr": "invoke"
-          },
-          {
-            "access": "static",
-            "method": {
-              "args": [
-                "boolean"
-              ],
-              "is_interface": false,
-              "name": "valueOf",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/Boolean"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/lang/Boolean"
-              }
-            },
-            "offset": 70,
-            "opr": "invoke"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/Object"
-                }
-              ],
-              "name": "add",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/ArrayList"
-              },
-              "returns": "boolean"
-            },
-            "offset": 73,
-            "opr": "invoke"
-          },
-          {
-            "offset": 76,
-            "opr": "pop",
-            "words": 1
-          },
-          {
-            "offset": 77,
-            "opr": "goto",
-            "target": 26
-          },
-          {
-            "index": 3,
-            "offset": 80,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "hasNextInt",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": "boolean"
-            },
-            "offset": 81,
-            "opr": "invoke"
-          },
-          {
-            "condition": "eq",
-            "offset": 84,
-            "opr": "ifz",
-            "target": 49
-          },
-          {
-            "index": 2,
-            "offset": 87,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 3,
             "offset": 88,
+            "opr": "invoke"
+          },
+          {
+            "offset": 93,
+            "opr": "return",
+            "type": "ref"
+          },
+          {
+            "index": 0,
+            "offset": 94,
             "opr": "load",
             "type": "ref"
           },
@@ -1362,611 +1359,112 @@
             "access": "virtual",
             "method": {
               "args": [],
-              "name": "nextInt",
+              "name": "toString",
               "ref": {
                 "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": "int"
-            },
-            "offset": 89,
-            "opr": "invoke"
-          },
-          {
-            "access": "static",
-            "method": {
-              "args": [
-                "int"
-              ],
-              "is_interface": false,
-              "name": "valueOf",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/Integer"
+                "name": "java/lang/Object"
               },
               "returns": {
                 "kind": "class",
-                "name": "java/lang/Integer"
+                "name": "java/lang/String"
               }
-            },
-            "offset": 92,
-            "opr": "invoke"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/Object"
-                }
-              ],
-              "name": "add",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/ArrayList"
-              },
-              "returns": "boolean"
             },
             "offset": 95,
             "opr": "invoke"
           },
           {
             "offset": 98,
-            "opr": "pop",
-            "words": 1
-          },
-          {
-            "offset": 99,
-            "opr": "goto",
-            "target": 26
-          },
-          {
-            "index": 3,
-            "offset": 102,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "next",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/lang/String"
-              }
-            },
-            "offset": 103,
-            "opr": "invoke"
-          },
-          {
-            "index": 4,
-            "offset": 106,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "index": 4,
-            "offset": 108,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "offset": 110,
-            "opr": "push",
-            "value": {
-              "type": "string",
-              "value": ","
-            }
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/Object"
-                }
-              ],
-              "name": "equals",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/String"
-              },
-              "returns": "boolean"
-            },
-            "offset": 112,
-            "opr": "invoke"
-          },
-          {
-            "condition": "ne",
-            "offset": 115,
-            "opr": "ifz",
-            "target": 63
-          },
-          {
-            "class": "java/lang/RuntimeException",
-            "offset": 118,
-            "opr": "new"
-          },
-          {
-            "offset": 121,
-            "opr": "dup",
-            "words": 1
-          },
-          {
-            "index": 0,
-            "offset": 122,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 4,
-            "offset": 123,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "dynamic",
-            "index": 2,
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                },
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                }
-              ],
-              "name": "makeConcatWithConstants",
-              "returns": {
-                "kind": "class",
-                "name": "java/lang/String"
-              }
-            },
-            "offset": 125,
-            "opr": "invoke"
-          },
-          {
-            "access": "special",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                }
-              ],
-              "is_interface": false,
-              "name": "<init>",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/RuntimeException"
-              },
-              "returns": null
-            },
-            "offset": 130,
-            "opr": "invoke"
-          },
-          {
-            "offset": 133,
-            "opr": "throw"
-          },
-          {
-            "offset": 134,
-            "opr": "goto",
-            "target": 26
-          },
-          {
-            "index": 3,
-            "offset": 137,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "close",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": null
-            },
-            "offset": 138,
-            "opr": "invoke"
-          },
-          {
-            "offset": 141,
-            "opr": "goto",
-            "target": 77
-          },
-          {
-            "index": 4,
-            "offset": 144,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "index": 3,
-            "offset": 146,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "close",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/Scanner"
-              },
-              "returns": null
-            },
-            "offset": 147,
-            "opr": "invoke"
-          },
-          {
-            "offset": 150,
-            "opr": "goto",
-            "target": 75
-          },
-          {
-            "index": 5,
-            "offset": 153,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "index": 4,
-            "offset": 155,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 5,
-            "offset": 157,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/Throwable"
-                }
-              ],
-              "name": "addSuppressed",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/Throwable"
-              },
-              "returns": null
-            },
-            "offset": 159,
-            "opr": "invoke"
-          },
-          {
-            "index": 4,
-            "offset": 162,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "offset": 164,
-            "opr": "throw"
-          },
-          {
-            "index": 2,
-            "offset": 165,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "toArray",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/ArrayList"
-              },
-              "returns": {
-                "kind": "array",
-                "type": {
-                  "kind": "class",
-                  "name": "java/lang/Object"
-                }
-              }
-            },
-            "offset": 166,
-            "opr": "invoke"
-          },
-          {
-            "offset": 169,
             "opr": "return",
             "type": "ref"
-          },
-          {
-            "class": "java/lang/RuntimeException",
-            "offset": 170,
-            "opr": "new"
-          },
-          {
-            "offset": 173,
-            "opr": "dup",
-            "words": 1
-          },
-          {
-            "index": 0,
-            "offset": 174,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "dynamic",
-            "index": 3,
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                }
-              ],
-              "name": "makeConcatWithConstants",
-              "returns": {
-                "kind": "class",
-                "name": "java/lang/String"
-              }
-            },
-            "offset": 175,
-            "opr": "invoke"
-          },
-          {
-            "access": "special",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                }
-              ],
-              "is_interface": false,
-              "name": "<init>",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/RuntimeException"
-              },
-              "returns": null
-            },
-            "offset": 180,
-            "opr": "invoke"
-          },
-          {
-            "offset": 183,
-            "opr": "throw"
           }
         ],
-        "exceptions": [
-          {
-            "catchType": "java/lang/Throwable",
-            "end": 64,
-            "handler": 67,
-            "start": 18
-          },
-          {
-            "catchType": "java/lang/Throwable",
-            "end": 70,
-            "handler": 71,
-            "start": 68
-          }
-        ],
+        "exceptions": [],
         "lines": [
           {
-            "line": 25,
+            "line": 20,
             "offset": 0
           },
           {
-            "line": 26,
-            "offset": 4
+            "line": 21,
+            "offset": 3
           },
           {
-            "line": 27,
-            "offset": 7
+            "line": 22,
+            "offset": 10
           },
           {
-            "line": 28,
-            "offset": 11
+            "line": 23,
+            "offset": 13
           },
           {
-            "line": 29,
-            "offset": 18
+            "line": 24,
+            "offset": 17
           },
           {
-            "line": 30,
-            "offset": 22
-          },
-          {
-            "line": 31,
-            "offset": 26
-          },
-          {
-            "line": 32,
-            "offset": 29
-          },
-          {
-            "line": 33,
+            "line": 25,
             "offset": 32
           },
           {
-            "line": 34,
+            "line": 24,
+            "offset": 37
+          },
+          {
+            "line": 27,
             "offset": 39
           },
           {
-            "line": 35,
-            "offset": 42
-          },
-          {
-            "line": 37,
-            "offset": 49
-          },
-          {
-            "line": 38,
-            "offset": 52
-          },
-          {
-            "line": 39,
-            "offset": 56
-          },
-          {
-            "line": 41,
-            "offset": 63
-          },
-          {
-            "line": 43,
-            "offset": 64
-          },
-          {
-            "line": 28,
-            "offset": 67
-          },
-          {
-            "line": 44,
-            "offset": 77
-          },
-          {
-            "line": 46,
-            "offset": 80
+            "line": 29,
+            "offset": 44
           }
         ],
         "max_locals": 6,
-        "max_stack": 4,
+        "max_stack": 2,
         "stack_map": [
           {
-            "index": 26,
-            "info": [
-              {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/util/regex/Matcher"
-                },
-                "type": "object"
-              },
-              {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/util/ArrayList"
-                },
-                "type": "object"
-              },
-              {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/util/Scanner"
-                },
-                "type": "object"
-              }
-            ],
-            "type": "append_frame"
-          },
-          {
-            "index": 39,
+            "index": 10,
             "type": "same"
           },
           {
-            "index": 49,
-            "type": "same"
-          },
-          {
-            "index": 63,
-            "type": "same"
-          },
-          {
-            "index": 64,
-            "type": "same"
-          },
-          {
-            "index": 67,
-            "info": {
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/Throwable"
-              },
-              "type": "object"
-            },
-            "type": "same_locals_1_stack_item_frame"
-          },
-          {
-            "index": 71,
+            "index": 25,
             "locals": [
               {
                 "ref": {
                   "kind": "class",
-                  "name": "java/lang/String"
+                  "name": "java/lang/Object"
                 },
                 "type": "object"
               },
               {
                 "ref": {
                   "kind": "class",
-                  "name": "java/util/regex/Matcher"
+                  "name": "java/util/List"
                 },
                 "type": "object"
               },
               {
                 "ref": {
-                  "kind": "class",
-                  "name": "java/util/ArrayList"
+                  "kind": "array",
+                  "type": "char"
                 },
                 "type": "object"
               },
               {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/util/Scanner"
-                },
-                "type": "object"
+                "type": "integer"
               },
               {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/lang/Throwable"
-                },
-                "type": "object"
+                "type": "integer"
               }
             ],
-            "stack": [
-              {
-                "ref": {
-                  "kind": "class",
-                  "name": "java/lang/Throwable"
-                },
-                "type": "object"
-              }
-            ],
+            "stack": [],
             "type": "full_frame"
           },
           {
-            "index": 75,
-            "type": "same"
-          },
-          {
-            "index": 77,
-            "info": 2,
+            "index": 39,
+            "info": 3,
             "type": "chop_frame"
           },
           {
-            "index": 80,
+            "index": 44,
             "info": 1,
             "type": "chop_frame"
           }
@@ -1974,7 +1472,7 @@
       },
       "default": null,
       "exceptions": [],
-      "name": "parseParams",
+      "name": "toInputString",
       "params": [
         {
           "annotations": [],
@@ -1983,7 +1481,7 @@
             "args": [],
             "inner": null,
             "kind": "class",
-            "name": "java/lang/String"
+            "name": "java/lang/Object"
           },
           "visible": true
         }
@@ -1991,14 +1489,10 @@
       "returns": {
         "annotations": [],
         "type": {
-          "kind": "array",
-          "type": {
-            "annotations": [],
-            "args": [],
-            "inner": null,
-            "kind": "class",
-            "name": "java/lang/Object"
-          }
+          "args": [],
+          "inner": null,
+          "kind": "class",
+          "name": "java/lang/String"
         }
       },
       "typeparams": []
@@ -2219,10 +1713,10 @@
                 }
               ],
               "is_interface": false,
-              "name": "parseParams",
+              "name": "parse",
               "ref": {
                 "kind": "class",
-                "name": "jpamb/utils/CaseContent"
+                "name": "jpamb/utils/InputParser"
               },
               "returns": {
                 "kind": "array",
@@ -2314,7 +1808,7 @@
           },
           {
             "access": "dynamic",
-            "index": 4,
+            "index": 5,
             "method": {
               "args": [
                 {
@@ -2359,31 +1853,31 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 51,
+            "line": 35,
             "offset": 0
           },
           {
-            "line": 52,
+            "line": 36,
             "offset": 3
           },
           {
-            "line": 54,
+            "line": 38,
             "offset": 7
           },
           {
-            "line": 55,
+            "line": 39,
             "offset": 10
           },
           {
-            "line": 56,
+            "line": 40,
             "offset": 14
           },
           {
-            "line": 57,
+            "line": 41,
             "offset": 18
           },
           {
-            "line": 59,
+            "line": 43,
             "offset": 26
           }
         ],
@@ -2456,7 +1950,7 @@
           },
           {
             "access": "dynamic",
-            "index": 5,
+            "index": 6,
             "method": {
               "args": [
                 {
@@ -2479,7 +1973,7 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 12,
+            "line": 10,
             "offset": 0
           }
         ],
@@ -2522,7 +2016,7 @@
           },
           {
             "access": "dynamic",
-            "index": 5,
+            "index": 6,
             "method": {
               "args": [
                 {
@@ -2549,7 +2043,7 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 12,
+            "line": 10,
             "offset": 0
           }
         ],
@@ -2620,7 +2114,7 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 12,
+            "line": 10,
             "offset": 0
           }
         ],
@@ -2683,7 +2177,7 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 12,
+            "line": 10,
             "offset": 0
           }
         ],
@@ -2708,162 +2202,6 @@
           "kind": "class",
           "name": "jpamb/utils/CaseContent"
         }
-      },
-      "typeparams": []
-    },
-    {
-      "access": [
-        "private",
-        "static",
-        "synthetic"
-      ],
-      "annotations": [],
-      "code": {
-        "annotations": [],
-        "bytecode": [
-          {
-            "index": 0,
-            "offset": 0,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "access": "virtual",
-            "method": {
-              "args": [],
-              "name": "toString",
-              "ref": {
-                "kind": "class",
-                "name": "java/lang/Object"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/lang/String"
-              }
-            },
-            "offset": 1,
-            "opr": "invoke"
-          },
-          {
-            "offset": 4,
-            "opr": "return",
-            "type": "ref"
-          }
-        ],
-        "exceptions": [],
-        "lines": [
-          {
-            "line": 17,
-            "offset": 0
-          }
-        ],
-        "max_locals": 1,
-        "max_stack": 1,
-        "stack_map": null
-      },
-      "default": null,
-      "exceptions": [],
-      "name": "lambda$toString$0",
-      "params": [
-        {
-          "annotations": [],
-          "type": {
-            "annotations": [],
-            "args": [],
-            "inner": null,
-            "kind": "class",
-            "name": "java/lang/Object"
-          },
-          "visible": true
-        }
-      ],
-      "returns": {
-        "annotations": [],
-        "type": {
-          "args": [],
-          "inner": null,
-          "kind": "class",
-          "name": "java/lang/String"
-        }
-      },
-      "typeparams": []
-    },
-    {
-      "access": [
-        "static"
-      ],
-      "annotations": [],
-      "code": {
-        "annotations": [],
-        "bytecode": [
-          {
-            "offset": 0,
-            "opr": "push",
-            "value": {
-              "type": "string",
-              "value": "\\(([^)]*)\\)"
-            }
-          },
-          {
-            "access": "static",
-            "method": {
-              "args": [
-                {
-                  "kind": "class",
-                  "name": "java/lang/String"
-                }
-              ],
-              "is_interface": false,
-              "name": "compile",
-              "ref": {
-                "kind": "class",
-                "name": "java/util/regex/Pattern"
-              },
-              "returns": {
-                "kind": "class",
-                "name": "java/util/regex/Pattern"
-              }
-            },
-            "offset": 2,
-            "opr": "invoke"
-          },
-          {
-            "field": {
-              "class": "jpamb/utils/CaseContent",
-              "name": "paramPattern",
-              "type": {
-                "kind": "class",
-                "name": "java/util/regex/Pattern"
-              }
-            },
-            "offset": 5,
-            "opr": "put",
-            "static": true
-          },
-          {
-            "offset": 8,
-            "opr": "return",
-            "type": null
-          }
-        ],
-        "exceptions": [],
-        "lines": [
-          {
-            "line": 22,
-            "offset": 0
-          }
-        ],
-        "max_locals": 0,
-        "max_stack": 1,
-        "stack_map": null
-      },
-      "default": null,
-      "exceptions": [],
-      "name": "<clinit>",
-      "params": [],
-      "returns": {
-        "annotations": [],
-        "type": null
       },
       "typeparams": []
     }

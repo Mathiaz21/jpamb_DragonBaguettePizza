@@ -2,33 +2,8 @@
 """ A very stupid syntatic analysis, that only checks for assertion errors.
 """
 
-import os
 import sys, logging
-
-l = logging
-l.basicConfig(level=logging.DEBUG)
-
-(name,) = sys.argv[1:]
-
-import re
-from pathlib import Path
-
-# Read the method_name
-RE = r"(?P<class_name>.+)\.(?P<method_name>.*)\:\((?P<params>.*)\)(?P<return>.*)"
-if not (i := re.match(RE, name)):
-    l.error("invalid method name: %r", name)
-    sys.exit(-1)
-
-TYPE_LOOKUP = {
-    "Z": "boolean",
-    "I": "int",
-}
-
-
-srcfile = (Path("src/main/java") / i["class_name"].replace(".", "/")).with_suffix(
-    ".java"
-)
-
+from jpamb_utils import MethodId
 import tree_sitter
 import tree_sitter_java
 
@@ -66,11 +41,19 @@ def getInfiniteLoopProbability(query,node,probability=1) -> int:
 JAVA_LANGUAGE = tree_sitter.Language(tree_sitter_java.language())
 parser = tree_sitter.Parser(JAVA_LANGUAGE)
 
+l = logging
+l.basicConfig(level=logging.DEBUG)
+
+(name,) = sys.argv[1:]
+method = MethodId.parse(name)
+
+srcfile = method.sourcefile()
+
 with open(srcfile, "rb") as f:
     l.debug("parse sourcefile %s", srcfile)
     tree = parser.parse(f.read())
 
-simple_classname = i["class_name"].split(".")[-1]
+simple_classname = method.class_name.split(".")[-1]
 
 # To figure out how to write these you can consult the
 # https://tree-sitter.github.io/tree-sitter/playground
@@ -90,7 +73,7 @@ else:
 
 l.debug("Found class %s", node.range)
 
-method_name = i["method_name"]
+method_name = method.method_name
 
 method_q = JAVA_LANGUAGE.query(
     f"""
@@ -107,11 +90,11 @@ for node in method_q.captures(node)["method"]:
 
     params = [c for c in p.children if c.type == "formal_parameter"]
 
-    if len(params) == len(i["params"]) and all(
+    if len(params) == len(method.params) and all(
         (tp := t.child_by_field_name("type")) is not None
         and tp.text is not None
-        and TYPE_LOOKUP[tn] == tp.text.decode()
-        for tn, t in zip(i["params"], params)
+        and tn == tp.text.decode()
+        for tn, t in zip(method.params, params)
     ):
         break
 else:

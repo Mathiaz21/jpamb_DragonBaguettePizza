@@ -3,8 +3,6 @@ package jpamb.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,37 +12,23 @@ public record CaseContent(
     ResultType result) {
 
   public String toString() {
-    List<String> sparams = Arrays.asList(params).stream().map(a -> a.toString()).toList();
-
+    List<String> sparams = Arrays.asList(params).stream().map(CaseContent::toInputString).toList();
     return "(" + String.join(", ", sparams) + ") -> " + result.toString();
   }
 
-  static Pattern paramPattern = Pattern.compile("\\(([^)]*)\\)");
-
-  public static Object[] parseParams(String string) {
-    Matcher matcher = paramPattern.matcher(string);
-    if (matcher.find()) {
-      ArrayList<Object> list = new ArrayList<>();
-      try (Scanner sc = new Scanner(matcher.group(1))) {
-        sc.useLocale(Locale.US);
-        sc.useDelimiter(" *, *");
-        while (sc.hasNext()) {
-          if (sc.hasNextBoolean()) {
-            list.add(sc.nextBoolean());
-          } else if (sc.hasNextInt()) {
-            list.add(sc.nextInt());
-          } else {
-            String var = sc.next();
-            if (!var.equals(",")) {
-              throw new RuntimeException("Invalid parameter: " + string + " // unexpected " + var);
-            }
-          }
-        }
+  public static String toInputString(Object obj) {
+    if (obj instanceof int[]) {
+      return "[I:" + Arrays.toString((int[]) obj).substring(1);
+    } else if (obj instanceof char[]) {
+      List<String> chars = new ArrayList<>();
+      for (char x : (char[]) obj) {
+        chars.add("'" + x + "'");
       }
-      return list.toArray();
+      return "[C:" + String.join(", ", chars) + "]";
     } else {
-      throw new RuntimeException(string + " is not a paramater list");
+      return obj.toString();
     }
+
   }
 
   public static CaseContent parse(String string) {
@@ -54,7 +38,7 @@ public record CaseContent(
     if (matcher.find()) {
       String args = matcher.group(1);
       String result = matcher.group(2);
-      return new CaseContent(parseParams(args), ResultType.parse(result));
+      return new CaseContent(InputParser.parse(args), ResultType.parse(result));
     } else {
       throw new RuntimeException("Invalid case: " + string);
     }

@@ -1,6 +1,7 @@
 package jpamb;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.*;
@@ -47,6 +48,10 @@ public class Runtime {
       b.append("F");
     } else if (c.equals(char.class)) {
       b.append("C");
+    } else if (c.equals(int[].class)) {
+      b.append("[I");
+    } else if (c.equals(char[].class)) {
+      b.append("[C");
     } else {
       throw new RuntimeException("Unknown type:" + c.toString());
     }
@@ -64,20 +69,44 @@ public class Runtime {
   }
 
   public static Class<?>[] parseMethodSignature(String s) {
-    Class<?>[] params = new Class[s.length()];
+    List<Class<?>> params = new ArrayList<>();
     for (int i = 0; i < s.length(); i++) {
       switch (s.charAt(i)) {
         case 'I' -> {
-          params[i] = int.class;
+          params.add(int.class);
           break;
         }
         case 'Z' -> {
-          params[i] = boolean.class;
+          params.add(boolean.class);
           break;
+        }
+        case 'C' -> {
+          params.add(char.class);
+          break;
+        }
+        case '[' -> {
+          i += 1;
+          switch (s.charAt(i)) {
+            case 'I' -> {
+              params.add(int[].class);
+              break;
+            }
+            case 'Z' -> {
+              params.add(boolean[].class);
+              break;
+            }
+            case 'C' -> {
+              params.add(char[].class);
+              break;
+            }
+          }
         }
       }
     }
-    return params;
+    Class<?>[] rparams = new Class<?>[params.size()];
+    params.toArray(rparams);
+
+    return rparams;
   }
 
   public static void main(String[] args)
@@ -109,7 +138,7 @@ public class Runtime {
         throw new RuntimeException("Expected " + pattern + " to be static");
       }
       for (int i = 1; i < args.length; i++) {
-        Object[] params = CaseContent.parseParams(args[i]);
+        Object[] params = InputParser.parse(args[i]);
         System.err.printf("Running %s with %s%n", m, Arrays.toString(params));
         try {
           m.invoke(null, params);

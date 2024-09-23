@@ -60,6 +60,7 @@ public class Calls {
   }
 
   public static int[] generatePrimeArray(int length) {
+    assert length >= 0;
     int[] primeArray = new int[length];
     primeArray[0] = 2;
     int count = 1, number = 3;
@@ -83,6 +84,8 @@ public class Calls {
   }
 
   @Case("(100) -> ok")
+  @Case("(0) -> out of bounds")
+  @Case("(-1) -> assertion error")
   @Tag({ CALL, ARRAY, LOOP, INTEGER_OVERFLOW })
   public static void allPrimesArePositive(int number) {
     for (int p : generatePrimeArray(number)) {

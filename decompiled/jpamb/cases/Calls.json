@@ -1111,31 +1111,88 @@
         "annotations": [],
         "bytecode": [
           {
-            "index": 0,
+            "field": {
+              "class": "jpamb/cases/Calls",
+              "name": "$assertionsDisabled",
+              "type": "boolean"
+            },
             "offset": 0,
+            "opr": "get",
+            "static": true
+          },
+          {
+            "condition": "ne",
+            "offset": 3,
+            "opr": "ifz",
+            "target": 8
+          },
+          {
+            "index": 0,
+            "offset": 6,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "condition": "ge",
+            "offset": 7,
+            "opr": "ifz",
+            "target": 8
+          },
+          {
+            "class": "java/lang/AssertionError",
+            "offset": 10,
+            "opr": "new"
+          },
+          {
+            "offset": 13,
+            "opr": "dup",
+            "words": 1
+          },
+          {
+            "access": "special",
+            "method": {
+              "args": [],
+              "is_interface": false,
+              "name": "<init>",
+              "ref": {
+                "kind": "class",
+                "name": "java/lang/AssertionError"
+              },
+              "returns": null
+            },
+            "offset": 14,
+            "opr": "invoke"
+          },
+          {
+            "offset": 17,
+            "opr": "throw"
+          },
+          {
+            "index": 0,
+            "offset": 18,
             "opr": "load",
             "type": "int"
           },
           {
             "dim": 1,
-            "offset": 1,
+            "offset": 19,
             "opr": "newarray",
             "type": "int"
           },
           {
             "index": 1,
-            "offset": 3,
+            "offset": 21,
             "opr": "store",
             "type": "ref"
           },
           {
             "index": 1,
-            "offset": 4,
+            "offset": 22,
             "opr": "load",
             "type": "ref"
           },
           {
-            "offset": 5,
+            "offset": 23,
             "opr": "push",
             "value": {
               "type": "integer",
@@ -1143,7 +1200,7 @@
             }
           },
           {
-            "offset": 6,
+            "offset": 24,
             "opr": "push",
             "value": {
               "type": "integer",
@@ -1151,95 +1208,21 @@
             }
           },
           {
-            "offset": 7,
+            "offset": 25,
             "opr": "array_store",
             "type": "int"
           },
           {
-            "offset": 8,
-            "opr": "push",
-            "value": {
-              "type": "integer",
-              "value": 1
-            }
-          },
-          {
-            "index": 2,
-            "offset": 9,
-            "opr": "store",
-            "type": "int"
-          },
-          {
-            "offset": 10,
-            "opr": "push",
-            "value": {
-              "type": "integer",
-              "value": 3
-            }
-          },
-          {
-            "index": 3,
-            "offset": 11,
-            "opr": "store",
-            "type": "int"
-          },
-          {
-            "index": 2,
-            "offset": 12,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "index": 0,
-            "offset": 13,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "condition": "ge",
-            "offset": 14,
-            "opr": "if",
-            "target": 57
-          },
-          {
-            "offset": 17,
-            "opr": "push",
-            "value": {
-              "type": "integer",
-              "value": 1
-            }
-          },
-          {
-            "index": 4,
-            "offset": 18,
-            "opr": "store",
-            "type": "int"
-          },
-          {
-            "index": 1,
-            "offset": 20,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 5,
-            "offset": 21,
-            "opr": "store",
-            "type": "ref"
-          },
-          {
-            "index": 5,
-            "offset": 23,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "offset": 25,
-            "opr": "arraylength"
-          },
-          {
-            "index": 6,
             "offset": 26,
+            "opr": "push",
+            "value": {
+              "type": "integer",
+              "value": 1
+            }
+          },
+          {
+            "index": 2,
+            "offset": 27,
             "opr": "store",
             "type": "int"
           },
@@ -1248,82 +1231,35 @@
             "opr": "push",
             "value": {
               "type": "integer",
-              "value": 0
+              "value": 3
             }
           },
           {
-            "index": 7,
+            "index": 3,
             "offset": 29,
             "opr": "store",
             "type": "int"
           },
           {
-            "index": 7,
+            "index": 2,
+            "offset": 30,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "index": 0,
             "offset": 31,
             "opr": "load",
             "type": "int"
           },
           {
-            "index": 6,
-            "offset": 33,
-            "opr": "load",
-            "type": "int"
-          },
-          {
             "condition": "ge",
-            "offset": 35,
+            "offset": 32,
             "opr": "if",
-            "target": 48
+            "target": 65
           },
           {
-            "index": 5,
-            "offset": 38,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 7,
-            "offset": 40,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "offset": 42,
-            "opr": "array_load",
-            "type": "int"
-          },
-          {
-            "index": 8,
-            "offset": 43,
-            "opr": "store",
-            "type": "int"
-          },
-          {
-            "index": 3,
-            "offset": 45,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "index": 8,
-            "offset": 46,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "offset": 48,
-            "operant": "rem",
-            "opr": "binary",
-            "type": "int"
-          },
-          {
-            "condition": "eq",
-            "offset": 49,
-            "opr": "ifz",
-            "target": 36
-          },
-          {
-            "offset": 52,
+            "offset": 35,
             "opr": "push",
             "value": {
               "type": "integer",
@@ -1331,12 +1267,41 @@
             }
           },
           {
-            "offset": 53,
-            "opr": "goto",
-            "target": 37
+            "index": 4,
+            "offset": 36,
+            "opr": "store",
+            "type": "int"
           },
           {
-            "offset": 56,
+            "index": 1,
+            "offset": 38,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "index": 5,
+            "offset": 39,
+            "opr": "store",
+            "type": "ref"
+          },
+          {
+            "index": 5,
+            "offset": 41,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "offset": 43,
+            "opr": "arraylength"
+          },
+          {
+            "index": 6,
+            "offset": 44,
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "offset": 46,
             "opr": "push",
             "value": {
               "type": "integer",
@@ -1344,22 +1309,57 @@
             }
           },
           {
-            "index": 4,
-            "offset": 57,
+            "index": 7,
+            "offset": 47,
             "opr": "store",
             "type": "int"
           },
           {
-            "index": 4,
-            "offset": 59,
+            "index": 7,
+            "offset": 49,
             "opr": "load",
             "type": "int"
           },
           {
-            "condition": "eq",
+            "index": 6,
+            "offset": 51,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "condition": "ge",
+            "offset": 53,
+            "opr": "if",
+            "target": 56
+          },
+          {
+            "index": 5,
+            "offset": 56,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "index": 7,
+            "offset": 58,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "offset": 60,
+            "opr": "array_load",
+            "type": "int"
+          },
+          {
+            "index": 8,
             "offset": 61,
-            "opr": "ifz",
-            "target": 48
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "index": 3,
+            "offset": 63,
+            "opr": "load",
+            "type": "int"
           },
           {
             "index": 8,
@@ -1368,105 +1368,162 @@
             "type": "int"
           },
           {
-            "index": 8,
             "offset": 66,
+            "operant": "rem",
+            "opr": "binary",
+            "type": "int"
+          },
+          {
+            "condition": "eq",
+            "offset": 67,
+            "opr": "ifz",
+            "target": 44
+          },
+          {
+            "offset": 70,
+            "opr": "push",
+            "value": {
+              "type": "integer",
+              "value": 1
+            }
+          },
+          {
+            "offset": 71,
+            "opr": "goto",
+            "target": 45
+          },
+          {
+            "offset": 74,
+            "opr": "push",
+            "value": {
+              "type": "integer",
+              "value": 0
+            }
+          },
+          {
+            "index": 4,
+            "offset": 75,
+            "opr": "store",
+            "type": "int"
+          },
+          {
+            "index": 4,
+            "offset": 77,
             "opr": "load",
             "type": "int"
           },
           {
-            "offset": 68,
+            "condition": "eq",
+            "offset": 79,
+            "opr": "ifz",
+            "target": 56
+          },
+          {
+            "index": 8,
+            "offset": 82,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "index": 8,
+            "offset": 84,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "offset": 86,
             "operant": "mul",
             "opr": "binary",
             "type": "int"
           },
           {
             "index": 3,
-            "offset": 69,
+            "offset": 87,
             "opr": "load",
             "type": "int"
           },
           {
             "condition": "le",
-            "offset": 70,
+            "offset": 88,
             "opr": "if",
-            "target": 46
+            "target": 54
           },
           {
-            "offset": 73,
+            "offset": 91,
             "opr": "goto",
-            "target": 48
+            "target": 56
           },
           {
             "amount": 1,
             "index": 7,
-            "offset": 76,
-            "opr": "incr"
-          },
-          {
-            "offset": 79,
-            "opr": "goto",
-            "target": 23
-          },
-          {
-            "index": 4,
-            "offset": 82,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "condition": "eq",
-            "offset": 84,
-            "opr": "ifz",
-            "target": 55
-          },
-          {
-            "index": 1,
-            "offset": 87,
-            "opr": "load",
-            "type": "ref"
-          },
-          {
-            "index": 2,
-            "offset": 88,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "index": 3,
-            "offset": 89,
-            "opr": "load",
-            "type": "int"
-          },
-          {
-            "offset": 90,
-            "opr": "array_store",
-            "type": "int"
-          },
-          {
-            "amount": 1,
-            "index": 2,
-            "offset": 91,
-            "opr": "incr"
-          },
-          {
-            "amount": 1,
-            "index": 3,
             "offset": 94,
             "opr": "incr"
           },
           {
             "offset": 97,
             "opr": "goto",
-            "target": 11
+            "target": 31
+          },
+          {
+            "index": 4,
+            "offset": 100,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "condition": "eq",
+            "offset": 102,
+            "opr": "ifz",
+            "target": 63
           },
           {
             "index": 1,
-            "offset": 100,
+            "offset": 105,
             "opr": "load",
             "type": "ref"
           },
           {
-            "offset": 101,
+            "index": 2,
+            "offset": 106,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "index": 3,
+            "offset": 107,
+            "opr": "load",
+            "type": "int"
+          },
+          {
+            "offset": 108,
+            "opr": "array_store",
+            "type": "int"
+          },
+          {
+            "amount": 1,
+            "index": 2,
+            "offset": 109,
+            "opr": "incr"
+          },
+          {
+            "amount": 1,
+            "index": 3,
+            "offset": 112,
+            "opr": "incr"
+          },
+          {
+            "offset": 115,
+            "opr": "goto",
+            "target": 19
+          },
+          {
+            "index": 1,
+            "offset": 118,
+            "opr": "load",
+            "type": "ref"
+          },
+          {
+            "offset": 119,
             "opr": "return",
             "type": "ref"
           }
@@ -1479,27 +1536,27 @@
           },
           {
             "line": 64,
-            "offset": 3
+            "offset": 8
           },
           {
             "line": 65,
-            "offset": 7
-          },
-          {
-            "line": 67,
             "offset": 11
           },
           {
+            "line": 66,
+            "offset": 15
+          },
+          {
             "line": 68,
-            "offset": 14
+            "offset": 19
           },
           {
             "line": 69,
-            "offset": 16
+            "offset": 22
           },
           {
             "line": 70,
-            "offset": 30
+            "offset": 24
           },
           {
             "line": 71,
@@ -1507,42 +1564,50 @@
           },
           {
             "line": 72,
-            "offset": 45
-          },
-          {
-            "line": 69,
             "offset": 46
           },
           {
-            "line": 75,
-            "offset": 48
+            "line": 73,
+            "offset": 53
           },
           {
-            "line": 76,
-            "offset": 50
-          },
-          {
-            "line": 77,
+            "line": 70,
             "offset": 54
           },
           {
-            "line": 79,
-            "offset": 55
-          },
-          {
-            "line": 80,
+            "line": 76,
             "offset": 56
           },
           {
-            "line": 82,
-            "offset": 57
+            "line": 77,
+            "offset": 58
+          },
+          {
+            "line": 78,
+            "offset": 62
+          },
+          {
+            "line": 80,
+            "offset": 63
+          },
+          {
+            "line": 81,
+            "offset": 64
+          },
+          {
+            "line": 83,
+            "offset": 65
           }
         ],
         "max_locals": 9,
         "max_stack": 3,
         "stack_map": [
           {
-            "index": 11,
+            "index": 8,
+            "type": "same"
+          },
+          {
+            "index": 19,
             "info": [
               {
                 "ref": {
@@ -1561,7 +1626,7 @@
             "type": "append_frame"
           },
           {
-            "index": 23,
+            "index": 31,
             "locals": [
               {
                 "type": "integer"
@@ -1600,7 +1665,7 @@
             "type": "full_frame"
           },
           {
-            "index": 36,
+            "index": 44,
             "info": [
               {
                 "type": "integer"
@@ -1609,28 +1674,28 @@
             "type": "append_frame"
           },
           {
-            "index": 37,
+            "index": 45,
             "info": {
               "type": "integer"
             },
             "type": "same_locals_1_stack_item_frame"
           },
           {
-            "index": 46,
+            "index": 54,
             "info": 1,
             "type": "chop_frame"
           },
           {
-            "index": 48,
+            "index": 56,
             "info": 3,
             "type": "chop_frame"
           },
           {
-            "index": 55,
+            "index": 63,
             "type": "same"
           },
           {
-            "index": 57,
+            "index": 65,
             "info": 1,
             "type": "chop_frame"
           }
@@ -1669,11 +1734,48 @@
       "annotations": [
         {
           "is_runtime_visible": true,
-          "type": "jpamb/utils/Case",
+          "type": "jpamb/utils/Cases",
           "values": {
             "value": {
-              "type": "string",
-              "value": "(100) -> ok"
+              "type": "array",
+              "value": [
+                {
+                  "type": "annotation",
+                  "value": {
+                    "type": "jpamb/utils/Case",
+                    "values": {
+                      "value": {
+                        "type": "string",
+                        "value": "(100) -> ok"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "annotation",
+                  "value": {
+                    "type": "jpamb/utils/Case",
+                    "values": {
+                      "value": {
+                        "type": "string",
+                        "value": "(0) -> out of bounds"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "annotation",
+                  "value": {
+                    "type": "jpamb/utils/Case",
+                    "values": {
+                      "value": {
+                        "type": "string",
+                        "value": "(-1) -> assertion error"
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
@@ -1912,19 +2014,19 @@
         "exceptions": [],
         "lines": [
           {
-            "line": 88,
+            "line": 91,
             "offset": 0
           },
           {
-            "line": 89,
+            "line": 92,
             "offset": 15
           },
           {
-            "line": 88,
+            "line": 91,
             "offset": 23
           },
           {
-            "line": 91,
+            "line": 94,
             "offset": 25
           }
         ],

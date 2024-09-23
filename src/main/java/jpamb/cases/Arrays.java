@@ -77,4 +77,34 @@ public class Arrays {
     }
     assert false;
   }
+
+  @Case("([I: ]) -> assertion error")
+  @Case("([I: 1]) -> ok")
+  @Tag({ ARRAY })
+  public static void arrayNotEmpty(int[] array) {
+    assert array.length > 0;
+  }
+
+  @Case("([C: 'h','e','l','l','o']) -> ok")
+  @Case("([C: 'x']) -> assertion error")
+  @Case("([C: ]) -> out of bounds")
+  @Tag({ ARRAY })
+  public static void arraySpellsHello(char[] array) {
+    assert array[0] == 'h'
+        && array[1] == 'e'
+        && array[2] == 'l'
+        && array[3] == 'l'
+        && array[4] == 'o';
+  }
+
+  @Case("([I: 50, 100, 200]) -> ok")
+  @Case("([I: ]) -> assertion error")
+  @Tag({ ARRAY })
+  public static void arraySumIsLarge(int[] array) {
+    int sum = 0;
+    for (int i = 0; i < array.length; i++) {
+      sum += array[i];
+    }
+    assert sum > 300;
+  }
 }

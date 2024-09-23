@@ -9,6 +9,8 @@ import sys
 import csv
 import json
 
+from jpamb_utils import InputParser, JvmType, JvmValue, MethodId
+
 import loguru
 
 W = TypeVar("W", bound=TextIO)
@@ -21,9 +23,6 @@ QUERIES = [
     "ok",
     "out of bounds",
 ]
-
-
-prim = bool | int
 
 
 def re_parser(ctx_, parms_, expr):
@@ -78,37 +77,16 @@ def setup_logger(verbose):
     return logger.bind(process="main")
 
 
-def print_prim(i: prim, file: W = sys.stdout) -> W:
-    if isinstance(i, bool):
-        if i:
-            file.write("true")
-        else:
-            file.write("false")
-    else:
-        print(i, file=file, end="")
-    return file
-
-
 @dataclass(frozen=True, order=True)
 class Input:
-    val: tuple[prim, ...]
+    val: tuple[JvmType, ...]
 
     @staticmethod
     def parse(string: str) -> "Input":
-        if not (m := re.match(r"\(([^)]*)\)", string)):
-            raise ValueError(f"Invalid inputs: {string!r}")
-        parsed_args = []
-        for i in m.group(1).split(","):
-            i = i.strip()
-            if not i:
-                continue
-            if i == "true":
-                parsed_args.append(True)
-            elif i == "false":
-                parsed_args.append(False)
-            else:
-                parsed_args.append(int(i))
-        return Input(tuple(parsed_args))
+        parsed_args = InputParser(string).parse_inputs()
+        input = Input(tuple(parsed_args))
+        assert string == str(input), f"{input} should formatted as {string}"
+        return input
 
     def __str__(self) -> str:
         return self.print(StringIO()).getvalue()
@@ -116,11 +94,7 @@ class Input:
     def print(self, file: W = sys.stdout) -> W:
         open, close = "()"
         file.write(open)
-        if self.val:
-            print_prim(self.val[0], file=file)
-            for i in self.val[1:]:
-                file.write(", ")
-                print_prim(i, file=file)
+        file.write(", ".join(map(str, self.val)))
         file.write(close)
         return file
 
@@ -140,6 +114,7 @@ def run_cmd(cmd: list[str], /, timeout, logger, **kwargs):
     logger = logger.bind(process=summary64(cmd))
     cp = None
     stdout = []
+    stderr = []
     tout = None
     try:
         start = monotonic()
@@ -161,6 +136,7 @@ def run_cmd(cmd: list[str], /, timeout, logger, **kwargs):
             assert cp.stderr
             with cp.stderr:
                 for line in iter(cp.stderr.readline, ""):
+                    stderr.append(line)
                     logger.debug(line[:-1])
 
         def save_result(cp):
@@ -179,7 +155,12 @@ def run_cmd(cmd: list[str], /, timeout, logger, **kwargs):
         end_ns = perf_counter_ns()
 
         if exitcode != 0:
-            raise subprocess.CalledProcessError(cmd=cmd, returncode=exitcode)
+            raise subprocess.CalledProcessError(
+                cmd=cmd,
+                returncode=exitcode,
+                stderr="\n".join(stderr),
+                output=stdout[0].strip(),
+            )
 
         logger.debug("done")
         return (stdout[0].strip(), end_ns - start_ns)
@@ -213,7 +194,7 @@ def runtime(*args, enable_assertions=False, **kwargs):
 
 @dataclass(frozen=True, order=True)
 class Case:
-    methodid: str
+    methodid: MethodId
     input: Input
     result: str
 
@@ -221,14 +202,13 @@ class Case:
     def from_spec(line):
         if not (m := re.match(r"([^ ]*) +(\([^)]*\)) -> (.*)", line)):
             raise ValueError(f"Unexpected line: {line!r}")
-        return Case(m.group(1), Input.parse(m.group(2)), m.group(3))
+        return Case(MethodId.parse(m.group(1)), Input.parse(m.group(2)), m.group(3))
 
     def __str__(self) -> str:
-        name = self.methodid.split(":")[0]
-        return f"{name}:{self.input} -> {self.result}"
+        return f"{self.methodid.class_name}.{self.methodid.method_name}:{self.input} -> {self.result}"
 
     @staticmethod
-    def by_methodid(iterable) -> list[tuple[str, list["Case"]]]:
+    def by_methodid(iterable) -> list[tuple[MethodId, list["Case"]]]:
         cases_by_id = collections.defaultdict(list)
 
         for c in iterable:
@@ -355,7 +335,7 @@ class Suite:
         for case in self.cases():
             self.logger.debug(f"Testing {case!s:<74}")
             cmd = ["java", "-cp", self.classfiles, "-ea"]
-            cmd += ["jpamb.Runtime", case.methodid, str(case.input)]
+            cmd += ["jpamb.Runtime", str(case.methodid), str(case.input)]
             timeout = 0.5
             try:
                 result, time = run_cmd(
@@ -363,7 +343,7 @@ class Suite:
                     timeout=timeout,
                     logger=self.logger,
                 )
-                self.logger.debug(f"Got {result!r} in {time}")
+                self.logger.debug(f"Got {result!r} in {time/10**9}s")
             except subprocess.CalledProcessError:
                 result = None
                 self.logger.debug(f"Process failed.")
@@ -399,7 +379,11 @@ class Suite:
             )
             jsonclazz.parent.mkdir(parents=True, exist_ok=True)
             cmd = ["jvm2json", f"-s{clazz}"]
-            encoding = json.loads(run_cmd(cmd, timeout=None, logger=self.logger)[0])
+            res, _ = run_cmd(cmd, timeout=None, logger=self.logger)
+            if not res:
+                self.logger.warning(f"jvm2json: {res}")
+            self.logger.trace(res)
+            encoding = json.loads(res)
             with open(jsonclazz, "w") as f:
                 json.dump(encoding, f, indent=2, sort_keys=True)
         self.logger.success("Done decompiling classfiles")

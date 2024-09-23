@@ -3,77 +3,13 @@
 """
 
 from dataclasses import dataclass
-from pathlib import Path
 import sys, logging
-from typing import Literal, TypeAlias, Optional
+from typing import Optional
+
+from jpamb_utils import InputParser, IntValue, MethodId
 
 l = logging
 l.basicConfig(level=logging.DEBUG, format="%(message)s")
-
-JvmType: TypeAlias = Literal["boolean"] | Literal["int"]
-
-
-@dataclass(frozen=True)
-class MethodId:
-    class_name: str
-    method_name: str
-    params: list[JvmType]
-    return_type: Optional[JvmType]
-
-    @classmethod
-    def parse(cls, name):
-        import re
-
-        TYPE_LOOKUP: dict[str, JvmType] = {
-            "Z": "boolean",
-            "I": "int",
-        }
-
-        RE = (
-            r"(?P<class_name>.+)\.(?P<method_name>.*)\:\((?P<params>.*)\)(?P<return>.*)"
-        )
-        if not (i := re.match(RE, name)):
-            l.error("invalid method name: %r", name)
-            sys.exit(-1)
-
-        return cls(
-            class_name=i["class_name"],
-            method_name=i["method_name"],
-            params=[TYPE_LOOKUP[p] for p in i["params"]],
-            return_type=None if i["return"] == "V" else TYPE_LOOKUP[i["return"]],
-        )
-
-    def classfile(self):
-        return Path("decompiled", *self.class_name.split(".")).with_suffix(".json")
-
-    def load(self):
-        import json
-
-        classfile = self.classfile()
-        with open(classfile) as f:
-            l.debug(f"read decompiled classfile {classfile}")
-            classfile = json.load(f)
-        for m in classfile["methods"]:
-            if (
-                m["name"] == self.method_name
-                and len(self.params) == len(m["params"])
-                and all(
-                    p == t["type"]["base"] for p, t in zip(self.params, m["params"])
-                )
-            ):
-                return m
-        else:
-            print("Could not find method")
-            sys.exit(-1)
-
-    def create_interpreter(self, inputs):
-        method = self.load()
-        return SimpleInterpreter(
-            bytecode=method["code"]["bytecode"],
-            locals=inputs,
-            stack=[],
-            pc=0,
-        )
 
 
 @dataclass
@@ -81,7 +17,7 @@ class SimpleInterpreter:
     bytecode: list
     locals: list
     stack: list
-    pc: int
+    pc: int = 0
     done: Optional[str] = None
 
     def interpet(self, limit=10):
@@ -109,7 +45,13 @@ class SimpleInterpreter:
         return self.done
 
     def step_push(self, bc):
-        self.stack.insert(0, bc["value"]["value"])
+        val = bc["value"]
+        if val is not None:
+            if bc["type"] == "integer":
+                return IntValue(bc["value"])
+            raise ValueError(f"Currently unknown value {bc}")
+
+        self.stack.insert(0, val)
         self.pc += 1
 
     def step_return(self, bc):
@@ -120,12 +62,7 @@ class SimpleInterpreter:
 
 if __name__ == "__main__":
     methodid = MethodId.parse(sys.argv[1])
-    inputs = []
-    result = sys.argv[2][1:-1]
-    if result != "":
-        for i in result.split(","):
-            if i == "true" or i == "false":
-                inputs.append(i == "true")
-            else:
-                inputs.append(int(i))
-    print(methodid.create_interpreter(inputs).interpet())
+    inputs = InputParser.parse(sys.argv[2])
+    m = methodid.load()
+    i = SimpleInterpreter(m["code"]["bytecode"], [i.tolocal() for i in inputs], [])
+    print(i.interpet())

@@ -13,6 +13,8 @@ for example:
 ```
 jpamb.cases.Simple.assertPositive:(I)V
 jpamb.cases.Simple.divideByZero:()I 
+jpamb.cases.Simple.divideZeroByZero:(II)I
+jpamb.cases.Arrays.arraySpellsHello:([C)V
 ```
 
 And the query is one of: 
@@ -127,6 +129,25 @@ If you prefer staying in Windows land, here are some tips and pointers:
 -   To support compiling with `gcc` and to make your life easier you 
     should install [MSYS2](https://www.msys2.org/) with mingw-w64 GCC.
     You can do this by following the guide in the link above (step 6 - 9.).
+    After this you would also have to install python and pip, before setting up the environment:
+
+    ```powershell
+    > pacman -S python
+    > pacman -S python-pip
+    ```
+
+-  Alternatively, after installing CSS through MSYS2, one can just add 
+   `"C:\msys64\ucrt64\bin"` (or wherever they have gcc.exe installed) to their
+   environment variable `"Path"`, and then GCC should work in a normal
+   terminal. To do this on Windows 11:
+
+    -   Click on Start and search for "edit the system environment variables"; click on it.
+    -   Click "Environment Variables..." at the bottom right (you should be on the tap "Advanced").
+    -   Find `"Path"`, either under "System variables" or "User variables" (whether you want it to work on the computer in general, or only when you are logged into your Windows account); double click it.
+    -   Click "New", and write the path to the bin-directory.
+    -   You can now close all the popups you have created by clicking "OK" on each.
+
+If you have any problems getting started on windows, please file an issue.
 
 ### Debug
 
@@ -153,6 +174,10 @@ lower the bar to entrance, the byte code of the benchmarks have already been dec
 The codec for the output is described [here](https://github.com/kalhauge/jvm2json/blob/main/CODEC.txt).
 
 Some sample code for how to get started can be seen in `solutions/bytecoder.py`.
+
+## Interpreting
+
+You can run an interpreter for each of the cases using the `bin/test.py` command.
 
 
 ## Developing

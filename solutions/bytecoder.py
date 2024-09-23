@@ -74,7 +74,7 @@ probabilities = {
 
 def print_probabilities(probabilities):
 
-    print(f"divide by 0;{probabilities['div_by_zero'] * 100}%")
+    print(f"divide by 0;{probabilities['div_by_0'] * 100}%")
     print(f"assertion error;{probabilities['assertion_error'] * 100}%")
     print(f"array out of bounds;{probabilities['array_out_of_bounds'] * 100}%")
     print(f"*;{probabilities['infinite_loop'] * 100}%")
@@ -84,7 +84,6 @@ def print_probabilities(probabilities):
 def evaluate_probabilities(probabilities):
 
     simulated_stack = []
-    l.debug("Trying to find a division operator")
     for instruction in m[jbinary.CODE][jbinary.BYTECODE]:
 
         treat_instruction(instruction, simulated_stack)
@@ -94,13 +93,19 @@ def evaluate_probabilities(probabilities):
 
 
 def treat_instruction(instruction, simulated_stack):
+
     match instruction[jbinary.OPERATION]:
+
         case jbinary.PUSH:
+
             treat_push(instruction, simulated_stack)
         case jbinary.LOAD:
+
             treat_load(instruction, simulated_stack)
         case jbinary.BINARY_EXPR:
+
             treat_operator(instruction, simulated_stack)
+
 
 
 def treat_push(instruction, simulated_stack):
@@ -111,31 +116,46 @@ def treat_push(instruction, simulated_stack):
 
 def treat_load(instruction, simulated_stack):
 
-    simulated_stack.append(instr["type"])
+    simulated_stack.append(instruction["type"])
 
     
 
 def treat_operator(instruction, simulated_stack):
 
     if instruction["operant"] == "div":
-
+            
+            l.debug("div found")
             treat_division(instruction, simulated_stack)
 
+    if (
+
+        instruction["opr"] == "invoke"
+        and instruction["method"]["ref"]["name"] == "java/lang/AssertionError"
+    ):
+
+        treat_assertion(instruction, simulated_stack)
 
 
 def treat_division(instruction, simulated_stack):
-    l.debug("Division instruction found")
-    l.debug(simulated_stack)
-    if 'value' in simulated_stack[-1]:
 
+    if 'value' in simulated_stack[-1]:
+        
+        l.debug("value in stack")
+        l.debug(simulated_stack)
         if simulated_stack[-1]["value"] == 0:
 
-            l.debug("Division by zero found")
+            l.debug("Div by zero found")
             probabilities["div_by_zero"] = 1
     else:
 
-        l.debug("No defined dividend")
         probabilities["div_by_zero"] = (1 + 3*probabilities["div_by_zero"]) / 4
+
+
+
+def treat_assertion(instruction, simulated_stack):
+
+    l.debug("!! !! Found an assertion error")
+
 
 
 ##########################################################
@@ -160,8 +180,7 @@ print_probabilities(probabilities)
 #         and inst["method"]["ref"]["name"] == "java/lang/AssertionError"
 #     ):
 
-#         l.debug("Found an assertion error")
-#         print("assertion error;80%")
+
         
 #     else:
 

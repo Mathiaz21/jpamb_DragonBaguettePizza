@@ -64,7 +64,7 @@ else:
 # Using the simulated_stack
 
 probabilities = {
-    "div_by_0": 0,
+    "div_by_zero": 0,
     "assertion_error": 0,
     "array_out_of_bounds": 0,
     "infinite_loop": 0,
@@ -74,7 +74,7 @@ probabilities = {
 
 def print_probabilities(probabilities):
 
-    print(f"divide by 0;{probabilities['div_by_0'] * 100}%")
+    print(f"divide by 0;{probabilities['div_by_zero'] * 100}%")
     print(f"assertion error;{probabilities['assertion_error'] * 100}%")
     print(f"array out of bounds;{probabilities['array_out_of_bounds'] * 100}%")
     print(f"*;{probabilities['infinite_loop'] * 100}%")
@@ -104,7 +104,10 @@ def treat_instruction(instruction, simulated_stack):
             treat_load(instruction, simulated_stack)
         case jbinary.BINARY_EXPR:
 
-            treat_operator(instruction, simulated_stack)
+            treat_binary_operator(instruction, simulated_stack)
+        case jbinary.INVOKE:
+
+            treat_invoke_operator(instruction, simulated_stack)    
 
 
 
@@ -120,18 +123,19 @@ def treat_load(instruction, simulated_stack):
 
     
 
-def treat_operator(instruction, simulated_stack):
+def treat_binary_operator(instruction, simulated_stack):
 
     if instruction["operant"] == "div":
-            
-            l.debug("div found")
+
             treat_division(instruction, simulated_stack)
 
-    if (
 
-        instruction["opr"] == "invoke"
-        and instruction["method"]["ref"]["name"] == "java/lang/AssertionError"
-    ):
+
+
+
+def treat_invoke_operator(instruction, simulated_stack):
+
+    if instruction["method"]["ref"]["name"] == jbinary.ASSERTION_ERROR:
 
         treat_assertion(instruction, simulated_stack)
 
@@ -140,11 +144,8 @@ def treat_division(instruction, simulated_stack):
 
     if 'value' in simulated_stack[-1]:
         
-        l.debug("value in stack")
-        l.debug(simulated_stack)
         if simulated_stack[-1]["value"] == 0:
 
-            l.debug("Div by zero found")
             probabilities["div_by_zero"] = 1
     else:
 
@@ -154,7 +155,7 @@ def treat_division(instruction, simulated_stack):
 
 def treat_assertion(instruction, simulated_stack):
 
-    l.debug("!! !! Found an assertion error")
+    l.debug("Found an assertion call")
 
 
 

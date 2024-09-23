@@ -11,3 +11,5 @@ class jbinary:
     BINARY_EXPR = "binary"
     DIVISION = "div"
     BYTECODE = "bytecode"
+    INVOKE = "invoke"
+    ASSERTION_ERROR = "java/lang/AssertionError"

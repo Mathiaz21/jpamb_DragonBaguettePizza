@@ -1,0 +1,5 @@
+yA> starting: ./solutions/bytecoder.py 'jpamb.cases.Arrays.arrayContent:()V' '()'
+yA> Traceback (most recent call last):
+yA>   File "/home/mathias/Documents/dtu/program_analysis/jpamb_DragonBaguettePizza/./solutions/bytecoder.py", line 11, in <module>
+yA>     (name,) = sys.argv[1:]
+yA> ValueError: too many values to unpack (expected 1)

@@ -14,7 +14,7 @@ def treat_instruction(instruction, simulated_stack,probability):
         case jbinary.LOAD:
             treat_load(instruction, simulated_stack)
         case jbinary.BINARY_EXPR:
-            treat_binary_operator(instruction, simulated_stack)
+            treat_binary_operator(instruction, simulated_stack,probability)
         # case jbinary.INVOKE:
         #     treat_invoke_operator(instruction, simulated_stack)
 
@@ -33,5 +33,6 @@ def calculateProbability(simulated_stack,probability):
         if simulated_stack[-1]["value"] == 0:
             probability = probability * 1
     else:
+        
         probability = (1 + 3*probability) / 4
 

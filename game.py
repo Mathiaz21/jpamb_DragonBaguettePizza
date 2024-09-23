@@ -10,8 +10,6 @@ l.basicConfig(level=logging.DEBUG)
 method = MethodId.parse(name)
 m = method.load()
 
-
-
-
+#TODO: preliminary search (syntactic or static) that help us to know which proability to calculate first
 
 sys.exit(0)

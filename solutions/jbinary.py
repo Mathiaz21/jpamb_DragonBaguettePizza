@@ -13,3 +13,5 @@ class jbinary:
     BYTECODE = "bytecode"
     INVOKE = "invoke"
     ASSERTION_ERROR = "java/lang/AssertionError"
+    IF_ZERO = "ifz"
+    RETURN = "return"

@@ -1,0 +1,22 @@
+# Choose a group name, remember it will be made public so choose 
+# a random string if you want to be anonymous
+group_name: "DragonBaguettePizza"
+
+# Answer true if the data you provide can be used anonomized for science!
+for_science: true
+
+# Underneath here add the tools which you want to run
+tools:
+  test: 
+    technologies:
+      - python
+
+    executable: 
+      - python
+      - game.py
+
+# Describe your machine here (for research purposes) 
+machine:
+  os: Windows 11 Pro
+  processor: "11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz"
+  memory: "16 GB"

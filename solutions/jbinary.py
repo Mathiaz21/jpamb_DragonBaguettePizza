@@ -1,11 +1,11 @@
 class jbinary: 
 
     #KEYS
+    CODE = "code"
+    BYTECODE = "bytecode"
     OPERATION = "opr"
 
     #VALUES
-    CODE = "code"
-    BYTE_CODE = ""
     PUSH = "push"
     LOAD = "load"
     BINARY_EXPR = "binary"

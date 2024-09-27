@@ -18,9 +18,15 @@ class Semantic_node:
 
     print('Node : ')
     print('Index : ', self.index)
-    print('Children : ')
-    for child in self.children:
-      print('   ', child)
+    if len(self.children) == 0:
+
+      print('No children')
+    else:
+
+      print('Children : ')
+      for child in self.children:
+        print('  ->', child)
+    print('')
 
   
   def get_children_indices(self, current_index: int, bytecode):
@@ -30,6 +36,10 @@ class Semantic_node:
 
       case 'ifz':
         children = self.get_if_instruction_children(current_index, bytecode)
+      case 'goto':
+        children = self.get_goto_instruction_children(current_index, bytecode)
+      case 'return':
+        children = []
       case _ : children = [current_index + 1]
       
     return children
@@ -40,21 +50,13 @@ class Semantic_node:
   
     children: list[int] = [current_index + 1]
     target : int = bytecode[current_index]['target']
-    children.append( self.find_target_index(self, bytecode, target))
+    children.append( target)
     return children
 
 
+  def get_goto_instruction_children(self, current_index, bytecode) -> list[int]:
 
-  def find_target_index(self, bytecode: list, target: int) -> int:
-
-    for i in range(len(bytecode)):
-      
-      byte_instruction = bytecode[i]
-      if byte_instruction['offset'] == target:
-        return i
-    
-    return
-
+    return [ bytecode[current_index]['target'] ]
 
 
 
@@ -114,8 +116,8 @@ class Mathias_interpreter:
 
 
 
-main_file_path: str = '../decompiled/jpamb/cases/Simple.json'
-main_method_name: str = 'divideByZero'
+main_file_path: str = '../decompiled/jpamb/cases/Loops.json'
+main_method_name: str = 'neverDivides'
 
 main_interpreter: Mathias_interpreter = Mathias_interpreter(main_file_path, main_method_name)
 

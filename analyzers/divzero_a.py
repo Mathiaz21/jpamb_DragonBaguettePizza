@@ -1,4 +1,4 @@
-from solutions.jbinary import jbinary
+from analyzers.jbinary import jbinary
 
 def getDivisionByZeroProbability(m):
     simulated_stack = []

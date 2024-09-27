@@ -3,7 +3,7 @@
 """
 
 import sys, logging
-from jbinary import jbinary
+from analyzers.jbinary import jbinary
 from jpamb_utils import MethodId
 
 l = logging

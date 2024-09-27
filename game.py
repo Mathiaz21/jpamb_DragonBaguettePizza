@@ -1,15 +1,17 @@
 import sys, logging
-from solutions.jbinary import jbinary
+from analyzers.jbinary import jbinary
 from jpamb_utils import MethodId
+from analyzers.interpreter import Interpreter
 
 l = logging
 l.basicConfig(level=logging.DEBUG)
-(name,) = sys.argv[1:]
+#(name,) = sys.argv[1:]
 
+name = "jpamb.cases.Simple.divideByZero:()I"
 
 method = MethodId.parse(name)
-m = method.load()
+fileName = "C:\GitHub\jpamb_DragonBaguettePizza\decompiled\jpamb\cases\Simple.json"
 
-#TODO: preliminary search (syntactic or static) that help us to know which proability to calculate first
+inter = Interpreter(fileName,method.method_name)
 
 sys.exit(0)

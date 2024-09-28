@@ -116,31 +116,31 @@ class Mathias_interpreter:
         self.process_return()
         Instruction_printer.print_return(self.stack, self.step_count, self.memory)
         
-    if self.tree_cursor == initial_cursor:
-      self.increment_tree_cursor()
+
     
 
 
 
   def process_push(self, current_byte) -> None:
-    self.stack.append( current_byte['value']['value']) 
+    self.stack.append( current_byte['value']['value'])
+    self.increment_tree_cursor()
 
 
   def process_load(self) -> None:
     self.stack.append( self.stack[-1] )
+    self.increment_tree_cursor()
   
 
   def process_store(self) -> None:
     self.memory.append( self.stack[-1] )
+    self.increment_tree_cursor()
 
 
   def process_dupplication(self) -> None:
 
-    if len( self.stack ) == 0:
-
-      return
-    self.stack.append( self.stack[-1] )
-    return
+    if len( self.stack ) != 0:
+      self.stack.append( self.stack[-1] )
+    self.increment_tree_cursor()
 
 
   def process_if_zero(self, current_byte) -> None:
@@ -155,6 +155,7 @@ class Mathias_interpreter:
 
   def process_goto(self, current_byte) -> None:
     target: int = current_byte[jbinary.TARGET]
+    Instruction_printer.print_goto(target)
     self.tree_cursor = target
   
   def process_get(self) -> None:
@@ -163,22 +164,23 @@ class Mathias_interpreter:
     self.stack.append(1) 
   
   def process_invoke(self) -> None:
-    return
+    self.increment_tree_cursor()
   
   def process_throw(self) -> None:
-    return
+    self.increment_tree_cursor()
   
   def process_division(self) -> None:
     if self.stack[-1] == 0:
       self.stack.append( 666 )
-      return
-    self.stack.append( self.stack[-2] / self.stack[-1] )
+    else:
+      self.stack.append( self.stack[-2] / self.stack[-1] )
+    self.increment_tree_cursor()
 
   def process_new(self) -> None:
-    return
+    self.increment_tree_cursor()
   
   def process_return(self) -> None:
-    return
+    self.increment_tree_cursor()
 
 
   def increment_tree_cursor(self) -> None:
@@ -197,6 +199,6 @@ class Mathias_interpreter:
   def update_cursor_after_if(self, evaluation, target):
 
     if evaluation:
-      self.increment_tree_cursor
+      self.increment_tree_cursor()
     else:
       self.tree_cursor = target

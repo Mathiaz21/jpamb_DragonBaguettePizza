@@ -1,5 +1,6 @@
 from semantic_node import *
 from solutions.jbinary import *
+from pretty_printer import *
 
 import json
 
@@ -66,12 +67,14 @@ class Mathias_interpreter:
 
     while( self.tree_cursor < len(self.bytecode)):
       self.process_node()
+      Pretty_printer.print_stack(self.stack)
 
   
 
   def process_node(self) -> None:
 
-    current_byte = self.bytecode[ self.semantic_tree[self.tree_cursor] ]
+    current_index: int = self.semantic_tree[self.tree_cursor].index
+    current_byte = self.bytecode[ current_index ]
     initial_cursor: int = self.tree_cursor
     match current_byte[jbinary.OPERATION]:
 
@@ -86,13 +89,15 @@ class Mathias_interpreter:
       case jbinary.IF_ZERO:
         self.process_if_zero(current_byte)
       case jbinary.GO_TO:
-        self.process_goto()
+        self.process_goto(current_byte)
       case jbinary.GET:
         self.process_get()
       case jbinary.INVOKE:
         self.process_invoke()
       case jbinary.THROW:
         self.process_throw()
+      case jbinary.DIVISION:
+        self.process_division()
       case jbinary.RETURN:
         self.process_return()
         
@@ -121,7 +126,7 @@ class Mathias_interpreter:
       return
     self.stack.append( self.stack[-1] )
     return
-  
+
 
   def process_if_zero(self, current_byte) -> None:
     
@@ -133,8 +138,9 @@ class Mathias_interpreter:
     
   
 
-  def process_goto() -> None:
-    return
+  def process_goto(self, current_byte) -> None:
+    target: int = current_byte[jbinary.TARGET]
+    self.tree_cursor(target)
   
   def process_get() -> None:
     return
@@ -145,7 +151,10 @@ class Mathias_interpreter:
   def process_throw() -> None:
     return
   
-  def process_return() -> None:
+  def process_division(self) -> None:
+    self.stack.append( self.stack[-2] / self.stack[-1] )
+  
+  def process_return(self) -> None:
     return
 
 
@@ -171,9 +180,13 @@ class Mathias_interpreter:
 
 
 
-main_file_path: str = '../decompiled/jpamb/cases/Loops.json'
-main_method_name: str = 'neverDivides'
+
+
+main_file_path: str = '../decompiled/jpamb/cases/Simple.json'
+main_method_name: str = 'divideByZero'
 
 main_interpreter: Mathias_interpreter = Mathias_interpreter(main_file_path, main_method_name)
 
-main_interpreter.print_tree_nodes()
+# main_interpreter.print_tree_nodes()
+
+main_interpreter.follow_program()

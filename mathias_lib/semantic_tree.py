@@ -67,7 +67,7 @@ class Mathias_interpreter:
 
     while( self.tree_cursor < len(self.bytecode)):
       self.process_node()
-      Pretty_printer.print_stack(self.stack)
+      Pretty_printer.print_stack(self.stack, 'My big fat Stack')
 
   
 

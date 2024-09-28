@@ -1,6 +1,6 @@
-from semantic_node import *
-from solutions.jbinary import *
-from pretty_printer import *
+from semantic_node import Semantic_node
+from solutions.jbinary import jbinary
+from instruction_printer import Instruction_printer
 
 import json
 
@@ -14,6 +14,7 @@ class Mathias_interpreter:
   stack: list[int] = []
   memory: list[int] = []
   tree_cursor: int = 0
+  step_count: int = 0
 
 
   def __init__(self, file_path: str, method_name: str) -> None:
@@ -66,13 +67,16 @@ class Mathias_interpreter:
   def follow_program(self) -> None:
 
     while( self.tree_cursor < len(self.bytecode)):
+
+      self.step_count += 1
       self.process_node()
-      Pretty_printer.print_stack(self.stack, 'My big fat Stack')
+
 
   
 
   def process_node(self) -> None:
 
+    Instruction_printer.print_step_title(self.step_count)
     current_index: int = self.semantic_tree[self.tree_cursor].index
     current_byte = self.bytecode[ current_index ]
     initial_cursor: int = self.tree_cursor
@@ -80,26 +84,37 @@ class Mathias_interpreter:
 
       case jbinary.PUSH:
         self.process_push(current_byte)
+        Instruction_printer.print_push(current_byte, self.stack, self.step_count)
       case jbinary.LOAD:
         self.process_load()
       case jbinary.STORE:
         self.process_store()
       case jbinary.DUPPLICATION:
         self.process_dupplication()
+        Instruction_printer.print_dup(self.stack, self.step_count)
       case jbinary.IF_ZERO:
         self.process_if_zero(current_byte)
+        Instruction_printer.print_ifz(current_byte, self.stack[-1])
       case jbinary.GO_TO:
         self.process_goto(current_byte)
       case jbinary.GET:
         self.process_get()
+        Instruction_printer.print_get(self.stack, self.step_count)
       case jbinary.INVOKE:
         self.process_invoke()
+        Instruction_printer.print_invoke(current_byte)
       case jbinary.THROW:
         self.process_throw()
-      case jbinary.DIVISION:
+        Instruction_printer.print_throw()
+      case jbinary.BINARY_EXPR:
         self.process_division()
+        Instruction_printer.print_division(self.stack, self.step_count)
+      case jbinary.NEW:
+        self.process_new()
+        Instruction_printer.print_new(current_byte)
       case jbinary.RETURN:
         self.process_return()
+        Instruction_printer.print_return(self.stack, self.step_count, self.memory)
         
     if self.tree_cursor == initial_cursor:
       self.increment_tree_cursor()
@@ -140,19 +155,27 @@ class Mathias_interpreter:
 
   def process_goto(self, current_byte) -> None:
     target: int = current_byte[jbinary.TARGET]
-    self.tree_cursor(target)
+    self.tree_cursor = target
   
-  def process_get() -> None:
+  def process_get(self) -> None:
+    # always pushes true (1) because in our case get 
+    # is only used to check if assertions are enabled
+    self.stack.append(1) 
+  
+  def process_invoke(self) -> None:
     return
   
-  def process_invoke() -> None:
-    return
-  
-  def process_throw() -> None:
+  def process_throw(self) -> None:
     return
   
   def process_division(self) -> None:
+    if self.stack[-1] == 0:
+      self.stack.append( 666 )
+      return
     self.stack.append( self.stack[-2] / self.stack[-1] )
+
+  def process_new(self) -> None:
+    return
   
   def process_return(self) -> None:
     return
@@ -161,7 +184,7 @@ class Mathias_interpreter:
   def increment_tree_cursor(self) -> None:
     self.tree_cursor += 1
 
-  def evaluate_if_zero(value, comparison_type):
+  def evaluate_if_zero(self, value, comparison_type):
 
     match comparison_type:
 
@@ -177,16 +200,3 @@ class Mathias_interpreter:
       self.increment_tree_cursor
     else:
       self.tree_cursor = target
-
-
-
-
-
-main_file_path: str = '../decompiled/jpamb/cases/Simple.json'
-main_method_name: str = 'divideByZero'
-
-main_interpreter: Mathias_interpreter = Mathias_interpreter(main_file_path, main_method_name)
-
-# main_interpreter.print_tree_nodes()
-
-main_interpreter.follow_program()

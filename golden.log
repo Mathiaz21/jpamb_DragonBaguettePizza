@@ -1,5 +1,35 @@
-yA> starting: ./solutions/bytecoder.py 'jpamb.cases.Arrays.arrayContent:()V' '()'
-yA> Traceback (most recent call last):
-yA>   File "/home/mathias/Documents/dtu/program_analysis/jpamb_DragonBaguettePizza/./solutions/bytecoder.py", line 11, in <module>
-yA>     (name,) = sys.argv[1:]
-yA> ValueError: too many values to unpack (expected 1)
+GX> starting: ./solutions/interpret.py 'jpamb.cases.Arrays.arrayContent:()V' '()'
+GX> STEP 0:
+GX>   PC: 0 {'offset': 0, 'opr': 'push', 'value': {'type': 'integer', 'value': 5}}
+GX>   LOCALS: []
+GX>   STACK: []
+GX> STEP 1:
+GX>   PC: 2 {'offset': 3, 'opr': 'dup', 'words': 1}
+GX>   LOCALS: []
+GX>   STACK: [5]
+GX> done
+fb> starting: ./solutions/interpret.py 'jpamb.cases.Arrays.arrayInBounds:()V' '()'
+fb> STEP 0:
+fb>   PC: 0 {'offset': 0, 'opr': 'push', 'value': {'type': 'integer', 'value': 2}}
+fb>   LOCALS: []
+fb>   STACK: []
+fb> STEP 1:
+fb>   PC: 2 {'offset': 3, 'opr': 'dup', 'words': 1}
+fb>   LOCALS: []
+fb>   STACK: [2]
+fb> done
+iQ> starting: ./solutions/interpret.py 'jpamb.cases.Arrays.arrayIsNull:()V' '()'
+iQ> STEP 0:
+iQ>   PC: 0 {'offset': 0, 'opr': 'push', 'value': None}
+iQ>   LOCALS: []
+iQ>   STACK: []
+iQ> Traceback (most recent call last):
+iQ>   File "/Users/kaizhi/Documents/semester2/02242ProgramAnaylse/jpamb_DragonBaguettePizza/./solutions/interpret.py", line 64, in <module>
+iQ>     print(i.interpret())
+iQ>           ^^^^^^^^^^^^^
+iQ>   File "/Users/kaizhi/Documents/semester2/02242ProgramAnaylse/jpamb_DragonBaguettePizza/./solutions/interpret.py", line 33, in interpret
+iQ>     fn(next)
+iQ>   File "/Users/kaizhi/Documents/semester2/02242ProgramAnaylse/jpamb_DragonBaguettePizza/./solutions/interpret.py", line 49, in step_push
+iQ>     self.stack.insert(0, bc["value"]["value"])
+iQ>                          ~~~~~~~~~~~^^^^^^^^^
+iQ> TypeError: 'NoneType' object is not subscriptable

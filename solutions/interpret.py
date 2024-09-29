@@ -20,13 +20,14 @@ class SimpleInterpreter:
     pc: int = 0
     done: Optional[str] = None
 
-    def interpet(self, limit=10):
+    def interpret(self, limit=100):
         for i in range(limit):
             next = self.bytecode[self.pc]
             l.debug(f"STEP {i}:")
             l.debug(f"  PC: {self.pc} {next}")
             l.debug(f"  LOCALS: {self.locals}")
             l.debug(f"  STACK: {self.stack}")
+            self.pc += 1
 
             if fn := getattr(self, "step_" + next["opr"], None):
                 fn(next)
@@ -45,13 +46,7 @@ class SimpleInterpreter:
         return self.done
 
     def step_push(self, bc):
-        val = bc["value"]
-        if val is not None:
-            if bc["type"] == "integer":
-                return IntValue(bc["value"])
-            raise ValueError(f"Currently unknown value {bc}")
-
-        self.stack.insert(0, val)
+        self.stack.insert(0, bc["value"]["value"])
         self.pc += 1
 
     def step_return(self, bc):
@@ -60,9 +55,10 @@ class SimpleInterpreter:
         self.done = "ok"
 
 
+
 if __name__ == "__main__":
     methodid = MethodId.parse(sys.argv[1])
     inputs = InputParser.parse(sys.argv[2])
     m = methodid.load()
     i = SimpleInterpreter(m["code"]["bytecode"], [i.tolocal() for i in inputs], [])
-    print(i.interpet())
+    print(i.interpret())

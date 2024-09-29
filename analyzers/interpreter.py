@@ -1,5 +1,6 @@
 from solutions.jbinary import jbinary
 import json
+from analyzers.semantic_node import Semantic_node
 
 class Interpreter:
 
@@ -50,8 +51,6 @@ class Interpreter:
 
     def addToTree(self,node,index1,index2=-1):
 
-
-
             if index1 < 0:
                 return
 
@@ -66,7 +65,3 @@ class Interpreter:
         #TODO         
     
 
-class Semantic_node:
-
-    index = 0
-    children = []

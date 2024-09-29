@@ -15,6 +15,15 @@ class Mathias_interpreter:
   memory: list[int] = []
   tree_cursor: int = 0
   step_count: int = 0
+  error_interruption: bool = False
+
+  analysis_results: dict = {
+    'divisions_by_zero': 0,
+    'unsure_divisions': 0,
+    'loop': 0,
+    'assertion_error': 0,
+    'array_out_of_bounds': 0,
+  }
 
 
   def __init__(self, file_path: str, method_name: str) -> None:
@@ -66,11 +75,13 @@ class Mathias_interpreter:
 
   def follow_program(self) -> None:
 
-    while( self.tree_cursor < len(self.bytecode)):
+    while( self.tree_cursor < len(self.bytecode) and not self.error_interruption):
 
       self.step_count += 1
       self.process_node()
 
+    if self.error_interruption:
+      Instruction_printer.print_error(self.stack, self.step_count, self.memory)
 
   
 
@@ -171,7 +182,8 @@ class Mathias_interpreter:
   
   def process_division(self) -> None:
     if self.stack[-1] == 0:
-      self.stack.append( 666 )
+      self.stack.append( 'div_by_zero' )
+      self.process_error()
     else:
       self.stack.append( self.stack[-2] / self.stack[-1] )
     self.increment_tree_cursor()
@@ -181,6 +193,9 @@ class Mathias_interpreter:
   
   def process_return(self) -> None:
     self.increment_tree_cursor()
+
+  def process_error(self) -> None:
+    self.error_interruption = True
 
 
   def increment_tree_cursor(self) -> None:

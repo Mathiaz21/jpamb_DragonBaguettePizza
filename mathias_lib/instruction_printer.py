@@ -43,6 +43,14 @@ class Instruction_printer:
     Instruction_printer.show_stack(stack, step_count)
     Instruction_printer.show_memory(memory, step_count)
 
+
+  def print_error(stack: list[int], step_count: int, memory: list[int]) -> None:
+
+    error_report: str = f'Program interrupted by error after {step_count} steps'
+    print(error_report)
+    Instruction_printer.show_stack(stack, step_count)
+    Instruction_printer.show_memory(memory, step_count)
+
   
   def print_ifz(instruction_byte, stack_top: int) -> None:
 

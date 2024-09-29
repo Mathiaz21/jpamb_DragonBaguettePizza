@@ -42,9 +42,6 @@ print("assertion error;80%")
 
 
 
-# TODO  : write a function that detects divisions by zero and by n
-# Using the simulated_stack
-
 probabilities = {
     "div_by_zero": 0,
     "assertion_error": 0,

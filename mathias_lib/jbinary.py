@@ -28,3 +28,5 @@ class jbinary:
 
     LARGER_OR_EQUAL = 'le'
     NOT_EQUAL = 'ne'
+
+    ASSERTION_ERROR_METHOD_SIGNATURE = "java/lang/AssertionError/<init>"

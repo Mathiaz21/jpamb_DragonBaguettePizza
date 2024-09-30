@@ -1,4 +1,4 @@
-from solutions.jbinary import jbinary
+from mathias_lib.jbinary import jbinary
 import json
 
 
@@ -10,6 +10,7 @@ class Slave:
   instruction_pointer: int = 0
   stack: list[int] = []
   memory: list[int] = []
+  json_file = {}
 
   error_interruption: bool = False
 
@@ -32,19 +33,25 @@ class Slave:
   def get_method_bytecode_from_file(self) -> list:
     
     file = open(self.file_path)
-    file_to_json = json.load(file)
+    self.json_file = json.load(file)
     file.close()
-    return self.find_method_bytecode_in_json(file_to_json)
+    return self.find_method_bytecode_in_json(self.json_file)
   
 
-  def find_method_bytecode_in_json(self, jsoned_file) -> list:
+  def find_method_bytecode_in_json(self, json_file=None, method_name = None) -> list:
 
-    for whole_method_instance in jsoned_file['methods']:
+    if(method_name is None):
+      method_name = self.method_name
 
-      if whole_method_instance['name'] == self.method_name:
+    if(json_file is None):
+      json_file = self.jsoned_file
+
+    for whole_method_instance in json_file['methods']:
+
+      if whole_method_instance['name'] == method_name:
         return whole_method_instance['code']['bytecode']
       
-    return
+    return []
 
 
   # --------- ANALYSIS FUNCTIONS ---------
@@ -52,7 +59,16 @@ class Slave:
 
   def follow_program(self) -> None:
 
-    while( self.tree_cursor < len(self.bytecode) and not self.error_interruption):
+    while( self.instruction_pointer < len(self.bytecode) and not self.error_interruption):
+      self.process_node()
+
+  def follow_method(self,method_name):
+    
+    method_bytecode = self.find_method_bytecode_in_json(self.json_file,method_name)
+    if(not method_bytecode):
+      return 
+    
+    while(self.instruction_pointer < len(self.bytecode) and not self.error_interruption):
       self.process_node()
 
 
@@ -76,7 +92,7 @@ class Slave:
       case jbinary.GET:
         self.process_get()
       case jbinary.INVOKE:
-        self.process_invoke()
+        self.process_invoke(current_byte)
       case jbinary.THROW:
         self.process_throw()
       case jbinary.BINARY_EXPR:
@@ -97,18 +113,24 @@ class Slave:
 
 
   def process_load(self) -> None:
-    self.stack.append( self.stack[-1] )
+    if(self.stack):
+      self.stack.append( self.stack[-1] )
+    else:
+      arg = "parameter to define"
+      self.stack.append(arg)
+
     self.increment_instructions_pointer()
   
 
   def process_store(self) -> None:
-    self.memory.append( self.stack[-1] )
+    if(self.stack):
+      self.memory.append( self.stack[-1] )
     self.increment_instructions_pointer()
 
 
   def process_dupplication(self) -> None:
 
-    if len( self.stack ) != 0:
+    if self.stack:
       self.stack.append( self.stack[-1] )
     self.increment_instructions_pointer()
 
@@ -132,8 +154,20 @@ class Slave:
     # is only used to check if assertions are enabled
     self.stack.append(1) 
   
-  def process_invoke(self) -> None:
-    self.increment_instructions_pointer()
+  def process_invoke(self,invoke_instruction) -> None:
+     method_prefix = invoke_instruction["method"]["ref"]["name"] + "/"
+     method_to_invoke = invoke_instruction["method"]["name"]
+                         
+
+     if(method_prefix + method_to_invoke is jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
+       return
+     
+     instruction_pointer_before_invoke = self.instruction_pointer 
+     self.instruction_pointer = 0 
+     self.follow_method(method_to_invoke)
+     self.instruction_pointer =  instruction_pointer_before_invoke
+    
+     self.increment_instructions_pointer()
   
   def process_throw(self) -> None:
     self.increment_instructions_pointer()

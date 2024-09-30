@@ -1,5 +1,5 @@
 from stack_printer import Stack_printer
-from solutions.jbinary import jbinary
+from jbinary import jbinary
 
 class Instruction_printer:
 

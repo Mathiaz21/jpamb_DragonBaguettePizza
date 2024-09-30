@@ -1,5 +1,5 @@
 from semantic_node import Semantic_node
-from solutions.jbinary import jbinary
+from jbinary import jbinary
 from instruction_printer import Instruction_printer
 
 import json

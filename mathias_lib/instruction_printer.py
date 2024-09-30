@@ -1,4 +1,4 @@
-from stack_printer import Stack_printer
+from mathias_lib.stack_printer import Stack_printer
 from solutions.jbinary import jbinary
 
 class Instruction_printer:

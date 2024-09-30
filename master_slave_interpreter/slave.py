@@ -1,5 +1,8 @@
-from solutions.jbinary import jbinary
 import json
+import sys
+sys.path.append('../')
+from solutions.jbinary import jbinary
+from mathias_lib.instruction_printer import Instruction_printer
 
 
 class Slave:
@@ -20,13 +23,15 @@ class Slave:
     'assertion_error': 0,
     'array_out_of_bounds': 0,
   }
+  reports_from_slaves: list[dict]
 
 
-  def __init__(self, file_path: str, method_name: str) -> None:
+  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict]) -> None:
     
     self.file_path = file_path
     self.method_name = method_name
     self.bytecode = self.get_method_bytecode_from_file()
+    self.reports_from_slaves = reports_from_slaves
 
 
   def get_method_bytecode_from_file(self) -> list:
@@ -52,8 +57,12 @@ class Slave:
 
   def follow_program(self) -> None:
 
-    while( self.tree_cursor < len(self.bytecode) and not self.error_interruption):
+    while( self.instruction_pointer < len(self.bytecode) and not self.error_interruption):
+
       self.process_node()
+      if self.error_interruption:
+
+        Instruction_printer.print_error(self.stack, self.instruction_pointer, self.memory)
 
 
   def process_node(self) -> None:
@@ -63,28 +72,37 @@ class Slave:
 
       case jbinary.PUSH:
         self.process_push(current_byte)
+        Instruction_printer.print_push(current_byte, self.stack, self.instruction_pointer)
       case jbinary.LOAD:
         self.process_load()
       case jbinary.STORE:
         self.process_store()
       case jbinary.DUPPLICATION:
         self.process_dupplication()
+        Instruction_printer.print_dup(self.stack, self.instruction_pointer)
       case jbinary.IF_ZERO:
         self.process_if_zero(current_byte)
+        Instruction_printer.print_ifz(current_byte, self.stack[-1])
       case jbinary.GO_TO:
         self.process_goto(current_byte)
       case jbinary.GET:
         self.process_get()
+        Instruction_printer.print_get(self.stack, self.instruction_pointer)
       case jbinary.INVOKE:
         self.process_invoke()
+        Instruction_printer.print_invoke(current_byte)
       case jbinary.THROW:
         self.process_throw()
+        Instruction_printer.print_throw()
       case jbinary.BINARY_EXPR:
         self.process_division()
+        Instruction_printer.print_division(self.stack, self.instruction_pointer)
       case jbinary.NEW:
         self.process_new()
+        Instruction_printer.print_new(current_byte)
       case jbinary.RETURN:
         self.process_return()
+        Instruction_printer.print_return(self.stack, self.instruction_pointer, self.memory)
         
 
     
@@ -125,7 +143,7 @@ class Slave:
 
   def process_goto(self, current_byte) -> None:
     target: int = current_byte[jbinary.TARGET]
-    self.tree_cursor = target
+    self.instruction_pointer = target
   
   def process_get(self) -> None:
     # always pushes true (1) because in our case get 

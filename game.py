@@ -7,10 +7,10 @@ l = logging
 l.basicConfig(level=logging.DEBUG)
 #(name,) = sys.argv[1:]
 
-name = "jpamb.cases.Simple.divideByZero:()I"
+name = "jpamb.cases.Calls.allPrimesArePositive:(I)V"
 
 method = MethodId.parse(name)
-fileName = "C:\GitHub\jpamb_DragonBaguettePizza\decompiled\jpamb\cases\Simple.json"
+fileName = "C:\GitHub\jpamb_DragonBaguettePizza\decompiled\jpamb\cases\Calls.json"
 
 inter = Interpreter(fileName,method.method_name)
 

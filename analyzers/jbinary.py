@@ -17,6 +17,6 @@ class jbinary:
     IF = "if"
     RETURN = "return"
     GOTO = "goto"
-
+    ASSERTION_ERROR_SIGNATURE = "java.lang.AssertionError:()"
     #DEFAULT VALUES
     GENERIC = "genericNode"

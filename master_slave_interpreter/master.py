@@ -1,5 +1,5 @@
-from file_manipulation import File_manipulator
-from slave import Slave
+from utils.file_manipulation import File_manipulator
+from master_slave_interpreter.slave import Slave
 
 class Master:
 

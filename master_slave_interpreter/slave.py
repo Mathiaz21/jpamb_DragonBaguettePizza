@@ -1,8 +1,8 @@
 import json
 import sys
-sys.path.append('../')
-from mathias_lib.jbinary import jbinary
-from mathias_lib.instruction_printer import Instruction_printer
+# sys.path.append('../')
+from utils.jbinary import jbinary
+from utils.instruction_printer import Instruction_printer
 
 
 class Slave:

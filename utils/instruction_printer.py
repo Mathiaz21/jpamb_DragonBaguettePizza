@@ -1,5 +1,5 @@
-from mathias_lib.stack_printer import Stack_printer
-from solutions.jbinary import jbinary
+from utils.stack_printer import Stack_printer
+from utils.jbinary import jbinary
 
 class Instruction_printer:
 

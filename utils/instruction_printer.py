@@ -1,12 +1,13 @@
 from utils.stack_printer import Stack_printer
+from utils.heap_printer import Heap_printer
 from utils.jbinary import jbinary
 
 class Instruction_printer:
 
 
-  def print_step_title(step_count) -> None:
+  def print_byte_index(step_count) -> None:
 
-    step_title: str = '─'*15 + f' STEP N° {step_count} ' + '─'*15
+    step_title: str = '─'*15 + f' BYTE INDEX {step_count} ' + '─'*15
     print('')
     print('')
     print(step_title)
@@ -21,7 +22,23 @@ class Instruction_printer:
     Instruction_printer.show_stack(stack, step_count)
     
 
+
+  def print_store(stack: list[int], step_count: int) -> None:
+
+    stored_value: int = stack[-1]
+    store_report: str = f'Store value {stored_value} on the stack'
+    print(store_report)
+    Instruction_printer.show_stack(stack, step_count)
   
+
+  def print_load(stack: list[int], step_count: int, current_byte) -> None:
+
+    index_of_load: int = current_byte['index']
+    load_report: str = f'Load on stack from memory index {index_of_load}'
+    print(load_report) 
+    Instruction_printer.show_stack(stack, step_count)
+
+
   def print_get(stack, step_count) -> None:
 
     get_report: str = f'Get value True (1) on the stack'
@@ -41,7 +58,7 @@ class Instruction_printer:
     return_report: str = f'Program terminated after {step_count} steps'
     print(return_report)
     Instruction_printer.show_stack(stack, step_count)
-    Instruction_printer.show_memory(memory, step_count)
+    Instruction_printer.show_heap(memory, step_count)
 
 
   def print_error(stack: list[int], step_count: int, memory: list[int]) -> None:
@@ -49,7 +66,7 @@ class Instruction_printer:
     error_report: str = f'Program interrupted by error after {step_count} steps'
     print(error_report)
     Instruction_printer.show_stack(stack, step_count)
-    Instruction_printer.show_memory(memory, step_count)
+    Instruction_printer.show_heap(memory, step_count)
 
   
   def print_ifz(instruction_byte, stack_top: int) -> None:
@@ -94,6 +111,23 @@ class Instruction_printer:
     goto_report: str = f'Going to instruction {target}'
     print(goto_report)
 
+  
+  def print_new_array(memory: list[int], step_count: int) -> None:
+
+    new_array_report: str = f'Initializing a new array'
+    print(new_array_report)
+    Instruction_printer.show_heap(memory, step_count)
+
+
+  def print_array_store(heap: list[int], step_count: int, stack: list[int]):
+
+    value_to_store: int = stack[-1]
+    index_of_storage: int = stack[-2]
+    array_store_report: str = f'Storing {value_to_store} in array at index {index_of_storage}'
+    print(array_store_report)
+    Instruction_printer.show_heap(heap, step_count)
+    # print(heap)
+
 
 
   def show_stack(stack, step_count) -> None:
@@ -103,10 +137,9 @@ class Instruction_printer:
     Stack_printer.print_stack(stack, stack_label)
 
   
-  def show_memory(memory: list[int], step_count: int) -> None:
+  def show_heap(heap: list[ list[int] ], step_count: int) -> None:
     
     print('')
-    stack_label: str = f'Memory at step n° {step_count}'
-    Stack_printer.print_stack(memory, stack_label)
+    Heap_printer.print_heap(heap)
 
   

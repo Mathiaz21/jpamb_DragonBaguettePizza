@@ -21,6 +21,8 @@ class jbinary:
     NEW = 'new'
     THROW = 'throw'
     RETURN = 'return'
+    NEW_ARRAY = 'newarray'
+    ARRAY_STORE = 'array_store'
 
     # CONDITION TYPES
     CONDITION = 'condition'

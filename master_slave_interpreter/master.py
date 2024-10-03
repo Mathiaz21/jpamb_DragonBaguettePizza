@@ -1,4 +1,3 @@
-from utils.file_manipulation import File_manipulator
 from master_slave_interpreter.slave import Slave
 
 class Master:
@@ -12,7 +11,6 @@ class Master:
 
   program_bytecode_file_path: str = ''
   method_name: str = ''
-  bytecode: list = []
   reports_from_slaves: list[dict] = []
 
 
@@ -20,8 +18,8 @@ class Master:
     
     self.program_bytecode_file_path = program_bytecode_file_path
     self.method_name = method_name
-    self.bytecode = File_manipulator.get_method_bytecode_from_file(self.method_name, self.program_bytecode_file_path)
     self.drop_a_slave_on_bytecode()
+    print(self.reports_from_slaves)
 
 
   def drop_a_slave_on_bytecode(self):
@@ -29,3 +27,5 @@ class Master:
     father_slave: Slave = Slave(self.program_bytecode_file_path, self.method_name, self.reports_from_slaves)
 
     father_slave.follow_program()
+
+  

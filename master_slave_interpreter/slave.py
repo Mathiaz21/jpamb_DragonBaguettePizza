@@ -15,30 +15,38 @@ class Slave:
   __heap: list[ list[int] ] = []
   __json_file = {}
 
-  error_interruption: bool = False
+  __error_interruption: bool = False
 
-  analysis_results: dict[str, float] = {
-    'divisions_by_zero': 0.,
-    'unsure_divisions': 0.,
-    'loop': 0.,
-    'assertion_error': 0.,
-    'array_out_of_bounds': 0.,
-    'null_pointer': 0.,
-  }
-  __reports_from_slaves: list[dict]
+  analysis_results: dict[str, float] = None
+  __reports_from_slaves: list[dict] = None
 
 
-  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=[]) -> None:
+  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=None):
     
     self.file_path = file_path
     self.method_name = method_name
     self.__bytecode = self.get_method_bytecode_from_file()
     self.__reports_from_slaves = reports_from_slaves
     self.__instruction_pointer = start_index
-    self.__stack = stack
+
+    self.analysis_results = {
+      'divisions_by_zero': 0.,
+      'unsure_divisions': 0.,
+      'loop': 0.,
+      'assertion_error': 0.,
+      'array_out_of_bounds': 0.,
+      'null_pointer': 0.,
+    }
+
+    #This if avoid sharing list among different instance of the class. Python is shit
+    if stack is None:
+      self.__stack = []
+    else:
+      self.__stack = stack
+
     for param in reversed(params):
       self.__stack.append(param)
-  
+
   def run(self):
     self.follow_program()
     return
@@ -74,7 +82,7 @@ class Slave:
 
   def follow_program(self) -> None:
 
-    while( self.__instruction_pointer < len(self.__bytecode) and not self.error_interruption):
+    while( self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
       Instruction_printer.print_byte_index(self.__instruction_pointer)
       self.process_node()
     self.kill_slave()
@@ -85,9 +93,9 @@ class Slave:
     if(not method_bytecode):
       return 
     
-    while(self.__instruction_pointer < len(self.__bytecode) and not self.error_interruption):
+    while(self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
       self.process_node()
-      if self.error_interruption:
+      if self.__error_interruption:
 
         Instruction_printer.print_error(self.__stack, self.__instruction_pointer, self.__heap)
 
@@ -184,15 +192,16 @@ class Slave:
     self.__instruction_pointer = target
   
   def process_get(self) -> None:
-    # always pushes true (1) because in our case get 
-    # is only used to check if assertions are enabled
-    self.__stack.append(1) 
+    self.__stack.append(1)
+    self.increment_instructions_pointer() 
   
   def process_invoke(self,invoke_instruction) -> None:
      method_prefix = invoke_instruction["method"]["ref"]["name"] + "/"
      method_to_invoke = invoke_instruction["method"]["name"]
                          
-     if(method_prefix + method_to_invoke is jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
+     if(method_prefix + method_to_invoke in jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
+       self.__error_interruption = True
+       self.analysis_results["assertion_error"] = 1 
        return
      
      instruction_pointer_before_invoke = self.__instruction_pointer 
@@ -226,7 +235,7 @@ class Slave:
 
 
   def process_error(self) -> None:
-    self.error_interruption = True
+    self.__error_interruption = True
 
 
   def process_new_array(self) -> None:
@@ -311,6 +320,8 @@ class Slave:
 
 
   def kill_slave(self) -> None:
+    if not self.__error_interruption:
+      self.analysis_results["ok"] = 1
     self.__reports_from_slaves.append(self.analysis_results)
 
 

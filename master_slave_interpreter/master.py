@@ -2,11 +2,13 @@ from master_slave_interpreter.slave import Slave
 
 class Master:
 
-  probabilities: dict = {
-    'division_by_zero': 0,
-    'assertion_error': 0,
-    'array_out_of_bounds': 0,
-    'infinite_loop': 0,
+  probabilities: dict[str, float] = {
+    'division_by_zero': 0.,
+    'assertion_error': 0.,
+    'array_out_of_bounds': 0.,
+    'infinite_loop': 0.,
+    'null_pointer': 0.,
+    'no_error': 0.,
   }
 
   program_bytecode_file_path: str = ''

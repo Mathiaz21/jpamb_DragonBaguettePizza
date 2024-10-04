@@ -1,4 +1,5 @@
 import json
+import re
 
 class File_manipulator:
 
@@ -18,3 +19,7 @@ class File_manipulator:
         return whole_method_instance['code']['bytecode']
       
     return
+  
+
+  def method_id_to_filepath(method_id: str) -> str:
+

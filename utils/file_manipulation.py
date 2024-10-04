@@ -23,3 +23,30 @@ class File_manipulator:
 
   def method_id_to_filepath(method_id: str) -> str:
 
+    regex_rule: str = r'jpamb\.cases\.([A-Z][a-z]+)\.[A-Za-z]+:\([A-Z]\)[A-Z]'
+    regex_info = re.match(regex_rule, method_id)
+    if regex_info:
+
+      file_name:str = regex_info.group(1)
+      filepath: str = f'decompiled/jpamb/cases/{file_name}.json'
+      print(filepath)
+      return filepath
+    else:
+
+      print('file not matched')
+
+
+  def method_id_to_method_name(method_id: str) -> str:
+
+    regex_rule: str = r'jpamb\.cases\.[A-Z][a-z]+\.([A-Za-z]+):\([A-Z]\)[A-Z]'
+    regex_info = re.match(regex_rule, method_id)
+    if regex_info:
+
+      method_name:str = regex_info.group(1)
+      print(method_name)
+      return method_name
+    else:
+
+      print('method_name not matched')
+
+File_manipulator.method_id_to_method_name('jpamb.cases.Simple.assertPositive:(I)V')

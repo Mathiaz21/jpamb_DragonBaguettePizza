@@ -14,7 +14,7 @@ tools:
 
     executable: 
       - python
-      - solutions/bytecoder.py
+      - master_slave_main.py
 
 # Some info about the machine who ran the experiments:
 machine:

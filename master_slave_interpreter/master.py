@@ -1,4 +1,5 @@
 from master_slave_interpreter.slave import Slave
+from utils.file_manipulation import File_manipulator
 
 class Master:
 
@@ -16,10 +17,9 @@ class Master:
   reports_from_slaves: list[dict] = []
 
 
-  def __init__(self, program_bytecode_file_path, method_name) -> None:
+  def __init__(self, method_id: str) -> None:
     
-    self.program_bytecode_file_path = program_bytecode_file_path
-    self.method_name = method_name
+    self.setup_master_parameters(method_id)
     self.drop_a_slave_on_bytecode()
     print(self.reports_from_slaves)
 
@@ -31,3 +31,8 @@ class Master:
     father_slave.follow_program()
 
   
+
+  def setup_master_parameters(self, method_id: str) -> None:
+
+    self.program_bytecode_file_path = File_manipulator.method_id_to_filepath(method_id)
+    self.method_name = File_manipulator.method_id_to_method_name(method_id)

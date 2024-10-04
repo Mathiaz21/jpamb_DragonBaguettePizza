@@ -25,7 +25,7 @@ class Slave:
     'array_out_of_bounds': 0.,
     'null_pointer': 0.,
   }
-  reports_from_slaves: list[dict]
+  __reports_from_slaves: list[dict]
 
 
   def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=[]) -> None:
@@ -33,11 +33,17 @@ class Slave:
     self.file_path = file_path
     self.method_name = method_name
     self.__bytecode = self.get_method_bytecode_from_file()
-    self.reports_from_slaves = reports_from_slaves
+    self.__reports_from_slaves = reports_from_slaves
     self.__instruction_pointer = start_index
     self.__stack = stack
-    for param in params:
-      self.__stack.push(param)
+    for param in reversed(params):
+      self.__stack.append(param)
+  
+  def run(self):
+    self.follow_program()
+    return
+
+
 
   def get_method_bytecode_from_file(self) -> list:
     
@@ -86,7 +92,7 @@ class Slave:
         Instruction_printer.print_error(self.__stack, self.__instruction_pointer, self.__heap)
 
 
-  def process_node(self, stack_offset) -> None:
+  def process_node(self, stack_offset=0) -> None:
 
     current_byte = self.__bytecode[ self.__instruction_pointer ]
     match current_byte[jbinary.OPERATION]:
@@ -305,7 +311,7 @@ class Slave:
 
 
   def kill_slave(self) -> None:
-    self.reports_from_slaves.append(self.analysis_results)
+    self.__reports_from_slaves.append(self.analysis_results)
 
 
 

@@ -3,6 +3,8 @@ class Heap_printer:
 
   def print_heap(heap: list[list[int]]) -> None:
 
+    if not heap:
+      return
     heap_width: int = Heap_printer.get_heap_width(heap)
     Heap_printer.print_heap_top(heap_width)
     

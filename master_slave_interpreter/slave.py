@@ -9,38 +9,56 @@ class Slave:
 
   slave_id: int = 0
 
-  bytecode: list = []
-  instruction_pointer: int = 0
-  stack: list[int] = []
-  heap: list[ list[int] ] = []
-  json_file = {}
+  __bytecode: list = []
+  __instruction_pointer: int = 0
+  __stack: list[int] = []
+  __heap: list[ list[int] ] = []
+  __json_file = {}
 
-  error_interruption: bool = False
+  __error_interruption: bool = False
 
-  analysis_results: dict = {
-    'divisions_by_zero': 0,
-    'unsure_divisions': 0,
-    'loop': 0,
-    'assertion_error': 0,
-    'array_out_of_bounds': 0,
-  }
-  reports_from_slaves: list[dict]
+  analysis_results: dict[str, float] = None
+  __reports_from_slaves: list[dict] = None
 
 
-  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict]) -> None:
+  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=None):
     
     self.file_path = file_path
     self.method_name = method_name
-    self.bytecode = self.get_method_bytecode_from_file()
-    self.reports_from_slaves = reports_from_slaves
+    self.__bytecode = self.get_method_bytecode_from_file()
+    self.__reports_from_slaves = reports_from_slaves
+    self.__instruction_pointer = start_index
+
+    self.analysis_results = {
+      'divisions_by_zero': 0.,
+      'unsure_divisions': 0.,
+      'loop': 0.,
+      'assertion_error': 0.,
+      'array_out_of_bounds': 0.,
+      'null_pointer': 0.,
+    }
+
+    #This if avoid sharing list among different instance of the class. Python is shit
+    if stack is None:
+      self.__stack = []
+    else:
+      self.__stack = stack
+
+    for param in reversed(params):
+      self.__stack.append(param)
+
+  def run(self):
+    self.follow_program()
+    return
+
 
 
   def get_method_bytecode_from_file(self) -> list:
     
     file = open(self.file_path)
-    self.json_file = json.load(file)
+    self.__json_file = json.load(file)
     file.close()
-    return self.find_method_bytecode_in_json(self.json_file)
+    return self.find_method_bytecode_in_json(self.__json_file)
   
 
   def find_method_bytecode_in_json(self, json_file=None, method_name = None) -> list:
@@ -64,48 +82,48 @@ class Slave:
 
   def follow_program(self) -> None:
 
-    while( self.instruction_pointer < len(self.bytecode) and not self.error_interruption):
-      Instruction_printer.print_byte_index(self.instruction_pointer)
+    while( self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
+      Instruction_printer.print_byte_index(self.__instruction_pointer)
       self.process_node()
     self.kill_slave()
 
   def follow_method(self,method_name):
     
-    method_bytecode = self.find_method_bytecode_in_json(self.json_file,method_name)
+    method_bytecode = self.find_method_bytecode_in_json(self.__json_file,method_name)
     if(not method_bytecode):
       return 
     
-    while(self.instruction_pointer < len(self.bytecode) and not self.error_interruption):
+    while(self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
       self.process_node()
-      if self.error_interruption:
+      if self.__error_interruption:
 
-        Instruction_printer.print_error(self.stack, self.instruction_pointer, self.heap)
+        Instruction_printer.print_error(self.__stack, self.__instruction_pointer, self.__heap)
 
 
-  def process_node(self) -> None:
+  def process_node(self, stack_offset=0) -> None:
 
-    current_byte = self.bytecode[ self.instruction_pointer ]
+    current_byte = self.__bytecode[ self.__instruction_pointer ]
     match current_byte[jbinary.OPERATION]:
 
       case jbinary.PUSH:
         self.process_push(current_byte)
-        Instruction_printer.print_push(current_byte, self.stack, self.instruction_pointer)
+        Instruction_printer.print_push(current_byte, self.__stack, self.__instruction_pointer)
       case jbinary.LOAD:
-        self.process_load(current_byte)
-        Instruction_printer.print_load(self.stack, self.instruction_pointer, current_byte)
+        self.process_load(current_byte,stack_offset)
+        Instruction_printer.print_load(self.__stack, self.__instruction_pointer, current_byte)
       case jbinary.STORE:
-        self.process_store(current_byte)
-        Instruction_printer.print_store(self.stack, self.instruction_pointer)
+        self.process_store(current_byte,stack_offset)
+        Instruction_printer.print_store(self.__stack, self.__instruction_pointer)
       case jbinary.DUPPLICATION:
-        Instruction_printer.print_dup(self.stack, self.instruction_pointer)
+        Instruction_printer.print_dup(self.__stack, self.__instruction_pointer)
         self.process_dupplication()
       case jbinary.IF_ZERO:
-        Instruction_printer.print_ifz(current_byte, self.stack[-1])
+        Instruction_printer.print_ifz(current_byte, self.__stack[-1])
         self.process_if_zero(current_byte)
       case jbinary.GO_TO:
         self.process_goto(current_byte)
       case jbinary.GET:
-        Instruction_printer.print_get(self.stack, self.instruction_pointer)
+        Instruction_printer.print_get(self.__stack, self.__instruction_pointer)
         self.process_get()
       case jbinary.INVOKE:
         Instruction_printer.print_invoke(current_byte)
@@ -114,64 +132,54 @@ class Slave:
         Instruction_printer.print_throw()
         self.process_throw()
       case jbinary.BINARY_EXPR:
-        Instruction_printer.print_division(self.stack, self.instruction_pointer)
+        Instruction_printer.print_division(self.__stack, self.__instruction_pointer)
         self.process_division()
       case jbinary.NEW:
         Instruction_printer.print_new(current_byte)
         self.process_new()
       case jbinary.RETURN:
-        Instruction_printer.print_return(self.stack, self.instruction_pointer, self.heap)
+        Instruction_printer.print_return(self.__stack, self.__instruction_pointer, self.__heap)
         self.process_return()
       case jbinary.NEW_ARRAY:
         self.process_new_array()
-        Instruction_printer.print_new_array(self.heap, self.instruction_pointer)
+        Instruction_printer.print_new_array(self.__heap, self.__instruction_pointer)
       case jbinary.ARRAY_STORE:
-        Instruction_printer.print_array_store(self.heap, self.instruction_pointer, self.stack)
+        Instruction_printer.print_array_store(self.__heap, self.__instruction_pointer, self.__stack)
         self.process_array_store()
-        
-
-    
-
-
 
   def process_push(self, current_byte) -> None:
-    self.stack.append( current_byte['value']['value'])
+    self.__stack.append( current_byte['value']['value'])
     self.increment_instructions_pointer()
 
 
-  def process_load(self, current_byte) -> None:
-
-    index_of_loading: int = current_byte['index']
-    array_length: int = len( self.heap[index_of_loading] )
-    reference_to_head: dict = {
-      'type' : 'array_ref',
-      'heap_index' : index_of_loading,
-      'length' : array_length
-    }
-    self.stack.append( reference_to_head )
+  def process_load(self, current_byte,stack_offset=0) -> None:
+    stack_index_to_load = current_byte['index']
+    i = stack_index_to_load + stack_offset
+    if i < len(self.__stack):
+      self.__stack.append(self.__stack[i])
     self.increment_instructions_pointer()
-  
 
-  def process_store(self, current_byte) -> None:
-    value_to_store: int = self.stack.pop()
+
+  def process_store(self, current_byte,stack_offset) -> None:
+    value_to_store: int = self.__stack.pop()
     index_of_storage: int = current_byte['index']
-    if index_of_storage == len(self.stack):
-      self.stack.append(value_to_store)
+    if index_of_storage == len(self.__stack): #to store at the same position it were
+      self.__stack.append(value_to_store)
     else:
-      self.stack[index_of_storage] = value_to_store
+      self.__stack[index_of_storage + stack_offset] = value_to_store
     self.increment_instructions_pointer()
 
 
   def process_dupplication(self) -> None:
 
-    if self.stack:
-      self.stack.append( self.stack[-1] )
+    if self.__stack:
+      self.__stack.append( self.__stack[-1] )
     self.increment_instructions_pointer()
 
 
   def process_if_zero(self, current_byte) -> None:
     
-    value: int = self.stack[-1]
+    value: int = self.__stack[-1]
     target: int = current_byte[jbinary.TARGET]
     comparison_type: str = current_byte[jbinary.CONDITION]
     evaluation: bool = self.evaluate_if_zero(value, comparison_type)
@@ -181,24 +189,25 @@ class Slave:
 
   def process_goto(self, current_byte) -> None:
     target: int = current_byte[jbinary.TARGET]
-    self.instruction_pointer = target
+    self.__instruction_pointer = target
   
   def process_get(self) -> None:
-    # always pushes true (1) because in our case get 
-    # is only used to check if assertions are enabled
-    self.stack.append(1) 
+    self.__stack.append(1)
+    self.increment_instructions_pointer() 
   
   def process_invoke(self,invoke_instruction) -> None:
      method_prefix = invoke_instruction["method"]["ref"]["name"] + "/"
      method_to_invoke = invoke_instruction["method"]["name"]
                          
-     if(method_prefix + method_to_invoke is jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
+     if(method_prefix + method_to_invoke in jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
+       self.__error_interruption = True
+       self.analysis_results["assertion_error"] = 1 
        return
      
-     instruction_pointer_before_invoke = self.instruction_pointer 
-     self.instruction_pointer = 0 
+     instruction_pointer_before_invoke = self.__instruction_pointer 
+     self.__instruction_pointer = 0 
      self.follow_method(method_to_invoke)
-     self.instruction_pointer =  instruction_pointer_before_invoke
+     self.__instruction_pointer =  instruction_pointer_before_invoke
     
      self.increment_instructions_pointer()
   
@@ -208,12 +217,12 @@ class Slave:
   
 
   def process_division(self) -> None:
-    if self.stack[-1] == 0:
-      self.stack.append( 'div_by_zero' )
+    if self.__stack[-1] == 0:
+      self.__stack.append( 'div_by_zero' )
       self.analysis_results['divisions_by_zero'] = 1
       self.process_error()
     else:
-      self.stack.append( self.stack[-2] / self.stack[-1] )
+      self.__stack.append( self.__stack[-2] / self.__stack[-1] )
     self.increment_instructions_pointer()
 
 
@@ -226,11 +235,11 @@ class Slave:
 
 
   def process_error(self) -> None:
-    self.error_interruption = True
+    self.__error_interruption = True
 
 
   def process_new_array(self) -> None:
-    array_length: int = self.stack.pop()
+    array_length: int = self.__stack.pop()
     array_index_in_heap: int = self.initialize_new_array_in_heap(array_length)
     self.store_array_ref_in_stack(array_length, array_index_in_heap)
     self.increment_instructions_pointer()
@@ -238,9 +247,9 @@ class Slave:
 
   def process_array_store(self) -> None:
 
-    value_to_store: int = self.stack.pop()
-    index_of_storage_in_array: int = self.stack.pop()
-    ref_of_array: dict = self.stack.pop()
+    value_to_store: int = self.__stack.pop()
+    index_of_storage_in_array: int = self.__stack.pop()
+    ref_of_array: dict = self.__stack.pop()
     array_length: int = ref_of_array['length']
     if index_of_storage_in_array > array_length - 1:
 
@@ -249,24 +258,24 @@ class Slave:
     else:
 
       array_heap_index: int = ref_of_array['heap_index']
-      array_in_heap: list[int] = self.heap[array_heap_index]
+      array_in_heap: list[int] = self.__heap[array_heap_index]
       array_in_heap[index_of_storage_in_array] = value_to_store
       self.increment_instructions_pointer()
 
 
 
   def add_to_array_in_memory(self, value: int, index: int) -> None:
-    if len(self.heap) == index:
-      self.heap.append(value)
-    elif len(self.heap) < index:
-      self.heap[index] = value
+    if len(self.__heap) == index:
+      self.__heap.append(value)
+    elif len(self.__heap) < index:
+      self.__heap[index] = value
     else:
       return # error
 
 
 
   def increment_instructions_pointer(self) -> None:
-    self.instruction_pointer += 1
+    self.__instruction_pointer += 1
 
 
   def evaluate_if_zero(self, value, comparison_type):
@@ -284,7 +293,7 @@ class Slave:
     if evaluation:
       self.increment_instructions_pointer()
     else:
-      self.instruction_pointer = target
+      self.__instruction_pointer = target
 
 
   def store_array_ref_in_stack(self, array_length, array_index_in_heap) -> None:
@@ -294,16 +303,16 @@ class Slave:
       'heap_index' : array_index_in_heap,
       'length' : array_length
     }
-    self.stack.append(array_ref)
+    self.__stack.append(array_ref)
 
   
   def initialize_new_array_in_heap(self, array_length) -> int:
 
-    array_index_in_heap: int = len(self.heap)
+    array_index_in_heap: int = len(self.__heap)
     new_array: list[int] = []
     for i in range(array_length):
       new_array.append(0)
-    self.heap.append(new_array)
+    self.__heap.append(new_array)
 
     return array_index_in_heap
 
@@ -311,7 +320,9 @@ class Slave:
 
 
   def kill_slave(self) -> None:
-    self.reports_from_slaves.append(self.analysis_results)
+    if not self.__error_interruption:
+      self.analysis_results["ok"] = 1
+    self.__reports_from_slaves.append(self.analysis_results)
 
 
 

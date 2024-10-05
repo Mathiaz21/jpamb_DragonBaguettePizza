@@ -1,5 +1,6 @@
 from master_slave_interpreter.slave import Slave
 from utils.file_manipulation import File_manipulator
+from utils.results_printer import print_results
 
 class Master:
 
@@ -29,6 +30,8 @@ class Master:
     father_slave: Slave = Slave(self.program_bytecode_file_path, self.method_name, self.reports_from_slaves)
 
     father_slave.follow_program()
+    print_results(self.probabilities)
+
 
   
 

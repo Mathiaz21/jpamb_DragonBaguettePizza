@@ -11,5 +11,6 @@ def print_results(analysis_results: dict) -> None:
 
   for c in criteria:
 
-    result_report = f'{c};{analysis_results[c] * 100}%'
+    result_percentage: int = int( analysis_results*100 )
+    result_report = f'{c};{result_percentage}%'
     print(result_report)

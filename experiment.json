@@ -1,0 +1,503 @@
+{
+  "group_name": "DragonBaguettePizza",
+  "for_science": true,
+  "tools": {
+    "bytecoder": {
+      "technologies": ["bytecode", "python", "dynamic"],
+      "executable": ["python3", "master_slave_main.py"],
+      "results": [
+        {
+          "method": "jpamb.cases.Arrays.arrayContent:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 23278400.0,
+          "calibrations": [
+            { "count": 100000, "time": 25578924 },
+            { "count": 100000, "time": 20977876 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayInBounds:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25071052.5,
+          "calibrations": [
+            { "count": 100000, "time": 24071689 },
+            { "count": 100000, "time": 26070416 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayIsNull:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 23463906.0,
+          "calibrations": [
+            { "count": 100000, "time": 22542314 },
+            { "count": 100000, "time": 24385498 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayIsNullLength:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 24241200.0,
+          "calibrations": [
+            { "count": 100000, "time": 23546042 },
+            { "count": 100000, "time": 24936358 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayLength:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 22343851.5,
+          "calibrations": [
+            { "count": 100000, "time": 23396087 },
+            { "count": 100000, "time": 21291616 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayNotEmpty:([I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 24822512.5,
+          "calibrations": [
+            { "count": 100000, "time": 22942171 },
+            { "count": 100000, "time": 26702854 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arrayOutOfBounds:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 22827207.5,
+          "calibrations": [
+            { "count": 100000, "time": 19545305 },
+            { "count": 100000, "time": 26109110 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arraySometimesNull:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 23810996.0,
+          "calibrations": [
+            { "count": 100000, "time": 23588298 },
+            { "count": 100000, "time": 24033694 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arraySpellsHello:([C)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 27559073.0,
+          "calibrations": [
+            { "count": 100000, "time": 25396352 },
+            { "count": 100000, "time": 29721794 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.arraySumIsLarge:([I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25420308.0,
+          "calibrations": [
+            { "count": 100000, "time": 26052257 },
+            { "count": 100000, "time": 24788359 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Arrays.binarySearch:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 27884057.5,
+          "calibrations": [
+            { "count": 100000, "time": 28570764 },
+            { "count": 100000, "time": 27197351 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.allPrimesArePositive:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25029425.5,
+          "calibrations": [
+            { "count": 100000, "time": 27266706 },
+            { "count": 100000, "time": 22792145 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.callsAssertFalse:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 18782747.0,
+          "calibrations": [
+            { "count": 100000, "time": 24461698 },
+            { "count": 100000, "time": 13103796 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.callsAssertFib:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 24273433.5,
+          "calibrations": [
+            { "count": 100000, "time": 27647426 },
+            { "count": 100000, "time": 20899441 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.callsAssertIf:(Z)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 12493637.5,
+          "calibrations": [
+            { "count": 100000, "time": 13279872 },
+            { "count": 100000, "time": 11707403 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.callsAssertIfWithTrue:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 27616764.5,
+          "calibrations": [
+            { "count": 100000, "time": 27985820 },
+            { "count": 100000, "time": 27247709 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Calls.callsAssertTrue:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 33378097.5,
+          "calibrations": [
+            { "count": 100000, "time": 24886560 },
+            { "count": 100000, "time": 41869635 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Loops.forever:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 26113266.5,
+          "calibrations": [
+            { "count": 100000, "time": 27173255 },
+            { "count": 100000, "time": 25053278 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Loops.neverAsserts:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25072240.0,
+          "calibrations": [
+            { "count": 100000, "time": 26332751 },
+            { "count": 100000, "time": 23811729 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Loops.neverDivides:()I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 26802941.0,
+          "calibrations": [
+            { "count": 100000, "time": 26613314 },
+            { "count": 100000, "time": 26992568 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Loops.terminates:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 22801400.5,
+          "calibrations": [
+            { "count": 100000, "time": 27028399 },
+            { "count": 100000, "time": 18574402 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.assertBoolean:(Z)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 26335231.0,
+          "calibrations": [
+            { "count": 100000, "time": 27999301 },
+            { "count": 100000, "time": 24671161 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.assertFalse:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25101470.5,
+          "calibrations": [
+            { "count": 100000, "time": 24434530 },
+            { "count": 100000, "time": 25768411 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.assertInteger:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 26362679.5,
+          "calibrations": [
+            { "count": 100000, "time": 26692239 },
+            { "count": 100000, "time": 26033120 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.assertPositive:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 26141205.0,
+          "calibrations": [
+            { "count": 100000, "time": 26141100 },
+            { "count": 100000, "time": 26141310 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.checkBeforeAssert:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 17895972.0,
+          "calibrations": [
+            { "count": 100000, "time": 10984796 },
+            { "count": 100000, "time": 24807148 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.checkBeforeDivideByN:(I)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 18095063.5,
+          "calibrations": [
+            { "count": 100000, "time": 23353973 },
+            { "count": 100000, "time": 12836154 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.checkBeforeDivideByN2:(I)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 24322884.5,
+          "calibrations": [
+            { "count": 100000, "time": 22118221 },
+            { "count": 100000, "time": 26527548 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.divideByN:(I)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 24356723.5,
+          "calibrations": [
+            { "count": 100000, "time": 32482243 },
+            { "count": 100000, "time": 16231204 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.divideByNMinus10054203:(I)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 18784388.5,
+          "calibrations": [
+            { "count": 100000, "time": 14866101 },
+            { "count": 100000, "time": 22702676 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.divideByZero:()I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 18948662.5,
+          "calibrations": [
+            { "count": 100000, "time": 12285922 },
+            { "count": 100000, "time": 25611403 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.divideZeroByZero:(II)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 19153305.5,
+          "calibrations": [
+            { "count": 100000, "time": 12556148 },
+            { "count": 100000, "time": 25750463 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.earlyReturn:()I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 25303635.0,
+          "calibrations": [
+            { "count": 100000, "time": 25165309 },
+            { "count": 100000, "time": 25441961 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.justReturn:()I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 18628113.0,
+          "calibrations": [
+            { "count": 100000, "time": 24964018 },
+            { "count": 100000, "time": 12292208 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.justReturnNothing:()V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 19553966.0,
+          "calibrations": [
+            { "count": 100000, "time": 14310143 },
+            { "count": 100000, "time": 24797789 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Simple.multiError:(Z)I",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 23328968.0,
+          "calibrations": [
+            { "count": 100000, "time": 20794955 },
+            { "count": 100000, "time": 25862981 }
+          ]
+        },
+        {
+          "method": "jpamb.cases.Tricky.collatz:(I)V",
+          "iteration": 0,
+          "wagers": {},
+          "time": NaN,
+          "relative": NaN,
+          "score": 0,
+          "calibration": 23416727.5,
+          "calibrations": [
+            { "count": 100000, "time": 21554929 },
+            { "count": 100000, "time": 25278526 }
+          ]
+        }
+      ],
+      "score": 0.0,
+      "time": NaN,
+      "relative": NaN
+    }
+  },
+  "machine": {
+    "os": "macosx",
+    "processor": "2,3 GHz Quad-Core Intel Core i7",
+    "memory": "16 GB 3733 MHz LPDDR4X"
+  },
+  "timestamp": 1728048914036,
+  "version": "0.1.0"
+}

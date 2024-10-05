@@ -23,7 +23,7 @@ class File_manipulator:
 
   def method_id_to_filepath(method_id: str) -> str:
 
-    regex_rule: str = r'jpamb\.cases\.([A-Z][a-z]+)\.[A-Za-z]+:\([A-Z]\)[A-Z]'
+    regex_rule: str = r'jpamb\.cases\.([A-Z][a-z]+)\.[A-Za-z]+:\([A-Z]*\)[A-Z]'
     regex_info = re.match(regex_rule, method_id)
     if regex_info:
 
@@ -38,7 +38,7 @@ class File_manipulator:
 
   def method_id_to_method_name(method_id: str) -> str:
 
-    regex_rule: str = r'jpamb\.cases\.[A-Z][a-z]+\.([A-Za-z]+):\([A-Z]\)[A-Z]'
+    regex_rule: str = r'jpamb\.cases\.[A-Z][a-z]+\.([A-Za-z]+):\([A-Z]*\)[A-Z]'
     regex_info = re.match(regex_rule, method_id)
     if regex_info:
 

@@ -22,13 +22,16 @@ class Slave:
   __should_print_process: bool = False
 
 
-  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=None):
+  def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=None, should_print_process: bool = False):
     
     self.file_path = file_path
     self.method_name = method_name
     self.__bytecode = self.get_method_bytecode_from_file()
     self.__reports_from_slaves = reports_from_slaves
     self.__instruction_pointer = start_index
+    self.__should_print_process = should_print_process
+    print(should_print_process)
+    print(self.__should_print_process)
 
     self.analysis_results: dict[str, float] = {
       jpamb_criteria.DIVIDE_BY_ZERO: False,
@@ -139,6 +142,12 @@ class Slave:
         self.process_new_array()
       case jbinary.ARRAY_STORE:
         self.process_array_store()
+      case jbinary.ARRAY_LENGTH:
+        self.process_array_length()
+      case jbinary.INCREMENT:
+        self.process_increment(current_byte)
+      # case _ :
+      #   self.increment_instructions_pointer()
 
     if self.__should_print_process:
       self.print_the_instruction(current_byte)
@@ -283,6 +292,19 @@ class Slave:
       array_in_heap[index_of_storage_in_array] = value_to_store
       self.increment_instructions_pointer()
 
+  def process_array_length(self) -> None:
+
+    array_reference: dict = self.__stack.pop()
+    self.__stack.append(array_reference['length'])
+    self.increment_instructions_pointer()
+
+
+  def process_increment(self, current_byte) -> None:
+
+    amount_to_increment: int = current_byte['amount']
+    stack_index_of_number: int = current_byte['index']
+    self.__stack[stack_index_of_number] += amount_to_increment
+    self.increment_instructions_pointer()
 
 
   def add_to_array_in_memory(self, value: int, index: int) -> None:
@@ -307,6 +329,8 @@ class Slave:
         return value >= 0
       case jbinary.NOT_EQUAL:
         return value != 0
+      case jbinary.GREATER_THAN:
+        return value > 0
       # TODO : complete potential cases
 
 
@@ -392,14 +416,15 @@ class Slave:
       case jbinary.NEW_ARRAY:
         Instruction_printer.print_new_array(self.__heap, self.__instruction_pointer)
       case jbinary.ARRAY_STORE:
-        Instruction_printer.print_array_store(self.__heap, self.__instruction_pointer, self.__stack)
+        Instruction_printer.print_array_store(self.__heap, self.__instruction_pointer)
+      case jbinary.ARRAY_LENGTH:
+        Instruction_printer.print_array_length(self.__stack, self.__instruction_pointer)
+      case jbinary.INCREMENT:
+        Instruction_printer.print_increment(current_byte, self.__stack, self.__instruction_pointer)
 
 
 
 
-# TODO : add the dupplication of slaves at an if statement
 # TODO : add the processing of the 3 other types of error on top of division by zero
 #         - Detection of infinite loops : step counter
-#         - Detection of array out of bounds : registering arrays in memory
 #         - Assertion error
-# TODO : Complete the unsure division

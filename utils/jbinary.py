@@ -5,7 +5,7 @@ class jbinary:
     BYTECODE = "bytecode"
     OPERATION = "opr"
 
-    # VALUES
+    # OPERATORS
     PUSH = "push"
     LOAD = "load"
     BINARY_EXPR = "binary"
@@ -24,6 +24,8 @@ class jbinary:
     RETURN = 'return'
     NEW_ARRAY = 'newarray'
     ARRAY_STORE = 'array_store'
+    ARRAY_LENGTH = 'arraylength'
+    INCREMENT = 'incr'
 
     # CONDITION TYPES
     CONDITION = 'condition'
@@ -32,5 +34,6 @@ class jbinary:
     LARGER_OR_EQUAL = 'le'
     GREATER_OR_EQUAL = 'ge'
     NOT_EQUAL = 'ne'
+    GREATER_THAN = 'gt'
 
     ASSERTION_ERROR_METHOD_SIGNATURE = "java/lang/AssertionError/<init>"

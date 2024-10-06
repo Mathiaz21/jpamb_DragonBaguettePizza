@@ -19,22 +19,22 @@ class Master:
   __reports_from_slaves: list[dict] = []
   __method : MethodId = None
   __slave_list: list[Slave] = []
+  __slave_should_print: bool = False
 
-  def __init__(self, method_id: str) -> None:
+  def __init__(self, method_id: str, should_print:bool) -> None:
     
     self.__method = MethodId.parse(method_id)
+    self.__slave_should_print = should_print
     self.setup_master_parameters(method_id)
     self.drop_slaves_on_bytecode()
-    # self.process_reports_from_slaves()
+    self.process_reports_from_slaves()
     self.print_probabilities_for_game()
 
 
   def drop_slaves_on_bytecode(self):
-    possible_params_values = [[],[]]
-    for i,param in enumerate(self.__method.params):
-      possible_params_values[i] = Master.get_value_list_from_type(param)
 
-    self.initialize_slave_list(possible_params_values)
+
+    self.initialize_slave_list()
     reports = []
     if self.__slave_list:  
       for slave in self.__slave_list:
@@ -44,11 +44,23 @@ class Master:
 
 
 
-  def initialize_slave_list(self, possible_params_values):
-     
-    if len(possible_params_values) == 0:
-       
-      self.__slave_list.append(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves)
+  def initialize_slave_list(self):
+    if len(self.__method.params) == 0:
+      self.initialize_single_slave()
+    else: 
+      self.initialize_several_slaves()
+
+
+
+  def initialize_single_slave(self):
+      self.__slave_list.append(Slave(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves, should_print_process=self.__slave_should_print))
+
+
+  def initialize_several_slaves(self):
+
+    possible_params_values = [[],[]]
+    for i,param in enumerate(self.__method.params):
+      possible_params_values[i] = Master.get_value_list_from_type(param)
     for param_1_value in possible_params_values[0]:
       params = [param_1_value]
       if possible_params_values[1]:
@@ -59,10 +71,11 @@ class Master:
           else:    
 
             params.append(param_2_value)
-          self.__slave_list.append(Slave(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves,params))
+          self.__slave_list.append( Slave(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves,params, should_print_process=self.__slave_should_print) )
       else:
 
-        self.__slave_list.append(Slave(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves,params))    
+        self.__slave_list.append(Slave(self.__program_bytecode_file_path, self.__method_name, self.__reports_from_slaves,params, should_print_process=self.__slave_should_print))
+
      
 
 

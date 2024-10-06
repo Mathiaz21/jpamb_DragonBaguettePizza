@@ -4,6 +4,13 @@ from utils.jbinary import jbinary
 
 class Instruction_printer:
 
+  def print_new_slave(slave_id: int) :
+
+    print('')
+    print('╭─────────────────────────────────╮')
+    print(f'│          NEW SLAVE, N°{slave_id}         │')
+    print('╰─────────────────────────────────╯')
+
 
   def print_byte_index(step_count) -> None:
 
@@ -16,7 +23,10 @@ class Instruction_printer:
 
   def print_push(instruction_byte, stack, step_count) -> None:
 
-    pushed_value: int = instruction_byte['value']['value']
+    if instruction_byte['value'] != None:
+      pushed_value: int = instruction_byte['value']['value']
+    else:
+      pushed_value: None = None
     push_report: str = f'Push value {pushed_value} on the stack'
     print(push_report)
     Instruction_printer.show_stack(stack, step_count)
@@ -69,16 +79,32 @@ class Instruction_printer:
     Instruction_printer.show_heap(memory, step_count)
 
   
-  def print_ifz(instruction_byte, stack_top: int) -> None:
+  def print_ifz(instruction_byte) -> None:
 
+    comparison_symbol: str
     match instruction_byte[jbinary.CONDITION]:
 
       case jbinary.LARGER_OR_EQUAL:
-        comparison_symbol: str = '>='
+        comparison_symbol= '>='
       case jbinary.NOT_EQUAL:
-        comparison_symbol: str = '!='
-    ifz_report: str = f'Ifz comparison : {stack_top} {comparison_symbol} 0'
+        comparison_symbol = '!='
+    ifz_report: str = f'''Ifz comparison : stack[-1] {comparison_symbol} 0
+      Else target : {instruction_byte[jbinary.TARGET]}'''
     print(ifz_report)
+
+
+  def print_if(instruction_byte) -> None:
+
+    comparison_symbol: str
+    match instruction_byte[jbinary.CONDITION]:
+
+      case jbinary.GREATER_OR_EQUAL:
+        comparison_symbol = '>='
+    if_report: str = f'''If comparison : stack[-1] {comparison_symbol} stack[-2]
+      Else target : {instruction_byte[jbinary.TARGET]}'''
+    print(if_report)
+
+
 
 
   def print_new(instruction_byte):
@@ -141,5 +167,3 @@ class Instruction_printer:
     
     print('')
     Heap_printer.print_heap(heap)
-
-  

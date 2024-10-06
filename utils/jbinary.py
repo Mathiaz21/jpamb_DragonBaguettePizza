@@ -15,6 +15,7 @@ class jbinary:
     ASSERTION_ERROR = "java/lang/AssertionError"
     DUPPLICATION = 'dup'
     STORE = 'store'
+    IF = 'if'
     IF_ZERO = 'ifz'
     GO_TO = 'goto'
     GET = 'get'
@@ -29,6 +30,7 @@ class jbinary:
     TARGET = 'target'
 
     LARGER_OR_EQUAL = 'le'
+    GREATER_OR_EQUAL = 'ge'
     NOT_EQUAL = 'ne'
 
     ASSERTION_ERROR_METHOD_SIGNATURE = "java/lang/AssertionError/<init>"

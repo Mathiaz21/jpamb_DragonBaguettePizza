@@ -107,11 +107,12 @@ class Heap_printer:
 
   def get_cell_width(N: int) -> int:
 
-    if type(N) == str:
-      print('N is not an int')
-      print(N)
-    N = max(N, 1)
+    
     cell_width: int = 2
+    if N < 0:
+      cell_width += 1
+      N *= -1
+    N = max(N, 1)
     while(N != 0):
 
       cell_width += 1

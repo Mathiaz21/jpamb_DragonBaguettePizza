@@ -1,7 +1,6 @@
 import json
-import sys
-# sys.path.append('../')
 from utils.jbinary import jbinary
+from utils.jpamb_criteria import jpamb_criteria
 from utils.instruction_printer import Instruction_printer
 
 
@@ -20,6 +19,8 @@ class Slave:
   analysis_results: dict[str, float] = None
   __reports_from_slaves: list[dict] = None
 
+  __should_print_process: bool = False
+
 
   def __init__(self, file_path: str, method_name: str, reports_from_slaves: list[dict],params = [],start_index = 0, stack=None):
     
@@ -29,13 +30,12 @@ class Slave:
     self.__reports_from_slaves = reports_from_slaves
     self.__instruction_pointer = start_index
 
-    self.analysis_results = {
-      'divisions_by_zero': 0.,
-      'unsure_divisions': 0.,
-      'loop': 0.,
-      'assertion_error': 0.,
-      'array_out_of_bounds': 0.,
-      'null_pointer': 0.,
+    self.analysis_results: dict[str, float] = {
+      jpamb_criteria.DIVIDE_BY_ZERO: False,
+      jpamb_criteria.INFINITE_LOOP: False,
+      jpamb_criteria.ASSERTION_ERROR: False,
+      jpamb_criteria.ARRAY_OUT_OF_BOUNDS: False,
+      jpamb_criteria.NULL_POINTER: False,
     }
 
     #This if avoid sharing list among different instance of the class. Python is shit
@@ -47,7 +47,10 @@ class Slave:
     for param in reversed(params):
       self.__stack.append(param)
 
+
   def run(self):
+    if self.__should_print_process:
+      Instruction_printer.print_new_slave(self.slave_id)
     self.follow_program()
     return
 
@@ -83,7 +86,6 @@ class Slave:
   def follow_program(self) -> None:
 
     while( self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
-      Instruction_printer.print_byte_index(self.__instruction_pointer)
       self.process_node()
     self.kill_slave()
 
@@ -102,53 +104,52 @@ class Slave:
 
   def process_node(self, stack_offset=0) -> None:
 
+    if self.__should_print_process:
+      Instruction_printer.print_byte_index(self.__instruction_pointer)
     current_byte = self.__bytecode[ self.__instruction_pointer ]
     match current_byte[jbinary.OPERATION]:
 
       case jbinary.PUSH:
         self.process_push(current_byte)
-        Instruction_printer.print_push(current_byte, self.__stack, self.__instruction_pointer)
       case jbinary.LOAD:
         self.process_load(current_byte,stack_offset)
-        Instruction_printer.print_load(self.__stack, self.__instruction_pointer, current_byte)
       case jbinary.STORE:
         self.process_store(current_byte,stack_offset)
-        Instruction_printer.print_store(self.__stack, self.__instruction_pointer)
       case jbinary.DUPPLICATION:
-        Instruction_printer.print_dup(self.__stack, self.__instruction_pointer)
         self.process_dupplication()
       case jbinary.IF_ZERO:
-        Instruction_printer.print_ifz(current_byte, self.__stack[-1])
         self.process_if_zero(current_byte)
+      case jbinary.IF:
+        self.process_if(current_byte)
       case jbinary.GO_TO:
         self.process_goto(current_byte)
       case jbinary.GET:
-        Instruction_printer.print_get(self.__stack, self.__instruction_pointer)
         self.process_get()
       case jbinary.INVOKE:
-        Instruction_printer.print_invoke(current_byte)
         self.process_invoke(current_byte)
       case jbinary.THROW:
-        Instruction_printer.print_throw()
         self.process_throw()
       case jbinary.BINARY_EXPR:
-        Instruction_printer.print_division(self.__stack, self.__instruction_pointer)
         self.process_division()
       case jbinary.NEW:
-        Instruction_printer.print_new(current_byte)
         self.process_new()
       case jbinary.RETURN:
-        Instruction_printer.print_return(self.__stack, self.__instruction_pointer, self.__heap)
         self.process_return()
       case jbinary.NEW_ARRAY:
         self.process_new_array()
-        Instruction_printer.print_new_array(self.__heap, self.__instruction_pointer)
       case jbinary.ARRAY_STORE:
-        Instruction_printer.print_array_store(self.__heap, self.__instruction_pointer, self.__stack)
         self.process_array_store()
 
+    if self.__should_print_process:
+      self.print_the_instruction(current_byte)
+
+
+
   def process_push(self, current_byte) -> None:
-    self.__stack.append( current_byte['value']['value'])
+    if current_byte['value'] != None:
+      self.__stack.append( current_byte['value']['value'])
+    else:
+      self.__stack.append( None )
     self.increment_instructions_pointer()
 
 
@@ -179,13 +180,26 @@ class Slave:
 
   def process_if_zero(self, current_byte) -> None:
     
-    value: int = self.__stack[-1]
+    value: int = self.__stack.pop()
     target: int = current_byte[jbinary.TARGET]
     comparison_type: str = current_byte[jbinary.CONDITION]
+
     evaluation: bool = self.evaluate_if_zero(value, comparison_type)
     self.update_cursor_after_if(evaluation, target)
     
   
+
+  def process_if(self, current_byte) -> None:
+
+    left_int: int = self.__stack.pop()
+    right_int: int = self.__stack.pop()
+    target: int = current_byte[jbinary.TARGET]
+    comparison_type = current_byte[jbinary.CONDITION]
+
+    evaluation: bool = self.evaluate_if(left_int, right_int, comparison_type)
+    self.update_cursor_after_if(evaluation, target)
+  
+
 
   def process_goto(self, current_byte) -> None:
     target: int = current_byte[jbinary.TARGET]
@@ -201,7 +215,7 @@ class Slave:
                          
      if(method_prefix + method_to_invoke in jbinary.ASSERTION_ERROR_METHOD_SIGNATURE):
        self.__error_interruption = True
-       self.analysis_results["assertion_error"] = 1 
+       self.analysis_results[jpamb_criteria.ASSERTION_ERROR] = True
        return
      
      instruction_pointer_before_invoke = self.__instruction_pointer 
@@ -217,12 +231,14 @@ class Slave:
   
 
   def process_division(self) -> None:
-    if self.__stack[-1] == 0:
-      self.__stack.append( 'div_by_zero' )
-      self.analysis_results['divisions_by_zero'] = 1
+
+    divisor: int = self.__stack.pop()
+    dividend: int = self.__stack.pop()
+    if divisor == 0:
+      self.analysis_results[jpamb_criteria.DIVIDE_BY_ZERO] = True
       self.process_error()
     else:
-      self.__stack.append( self.__stack[-2] / self.__stack[-1] )
+      self.__stack.append( dividend // divisor )
     self.increment_instructions_pointer()
 
 
@@ -250,10 +266,15 @@ class Slave:
     value_to_store: int = self.__stack.pop()
     index_of_storage_in_array: int = self.__stack.pop()
     ref_of_array: dict = self.__stack.pop()
+    if ref_of_array == None:
+
+      self.analysis_results[jpamb_criteria.NULL_POINTER] = 1.
+      self.process_error()
+      return
     array_length: int = ref_of_array['length']
     if index_of_storage_in_array > array_length - 1:
 
-      self.analysis_results['array_out_of_bounds'] = 1
+      self.analysis_results[jpamb_criteria.ARRAY_OUT_OF_BOUNDS] = 1.
       self.process_error()
     else:
 
@@ -278,7 +299,7 @@ class Slave:
     self.__instruction_pointer += 1
 
 
-  def evaluate_if_zero(self, value, comparison_type):
+  def evaluate_if_zero(self, value: int, comparison_type) -> bool:
 
     match comparison_type:
 
@@ -286,7 +307,19 @@ class Slave:
         return value >= 0
       case jbinary.NOT_EQUAL:
         return value != 0
-      
+      # TODO : complete potential cases
+
+
+
+  def evaluate_if(self, left_int: int, right_int: int, comparison_type) -> bool:
+
+    match comparison_type:
+
+      case jbinary.GREATER_OR_EQUAL:
+        return left_int >= right_int
+      # TODO : complete potential cases
+
+
   
   def update_cursor_after_if(self, evaluation, target) -> None:
 
@@ -323,6 +356,44 @@ class Slave:
     if not self.__error_interruption:
       self.analysis_results["ok"] = 1
     self.__reports_from_slaves.append(self.analysis_results)
+
+
+
+  def print_the_instruction(self, current_byte):
+
+    match current_byte[jbinary.OPERATION]:
+
+      case jbinary.PUSH:
+        Instruction_printer.print_push(current_byte, self.__stack, self.__instruction_pointer)
+      case jbinary.LOAD:
+        Instruction_printer.print_load(self.__stack, self.__instruction_pointer, current_byte)
+      case jbinary.STORE:
+        Instruction_printer.print_store(self.__stack, self.__instruction_pointer)
+      case jbinary.DUPPLICATION:
+        Instruction_printer.print_dup(self.__stack, self.__instruction_pointer)
+      case jbinary.IF_ZERO:
+        Instruction_printer.print_ifz(current_byte)
+      case jbinary.IF:
+        Instruction_printer.print_if(current_byte)
+      case jbinary.GO_TO:
+        pass
+      case jbinary.GET:
+        Instruction_printer.print_get(self.__stack, self.__instruction_pointer)
+      case jbinary.INVOKE:
+        Instruction_printer.print_invoke(current_byte)
+      case jbinary.THROW:
+        Instruction_printer.print_throw()
+      case jbinary.BINARY_EXPR:
+        Instruction_printer.print_division(self.__stack, self.__instruction_pointer)
+      case jbinary.NEW:
+        Instruction_printer.print_new(current_byte)
+      case jbinary.RETURN:
+        Instruction_printer.print_return(self.__stack, self.__instruction_pointer, self.__heap)
+      case jbinary.NEW_ARRAY:
+        Instruction_printer.print_new_array(self.__heap, self.__instruction_pointer)
+      case jbinary.ARRAY_STORE:
+        Instruction_printer.print_array_store(self.__heap, self.__instruction_pointer, self.__stack)
+
 
 
 

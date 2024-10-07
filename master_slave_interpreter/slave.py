@@ -30,8 +30,6 @@ class Slave:
     self.__reports_from_slaves = reports_from_slaves
     self.__instruction_pointer = start_index
     self.__should_print_process = should_print_process
-    print(should_print_process)
-    print(self.__should_print_process)
 
     self.analysis_results: dict[str, float] = {
       jpamb_criteria.DIVIDE_BY_ZERO: False,

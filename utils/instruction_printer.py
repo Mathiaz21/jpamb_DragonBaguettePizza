@@ -131,7 +131,7 @@ class Instruction_printer:
 
   def print_division(stack: list[int], step_count: int) -> None:
 
-    division_report: str = f' Division : {stack[-3]} / {stack[-2]}'
+    division_report: str = f' Division : stack[-2] / stack[-1]'
     print(division_report)
     Instruction_printer.show_stack(stack, step_count)
 

@@ -10,6 +10,8 @@ class Slave:
 
   __bytecode: list = []
   __instruction_pointer: int = 0
+  __step_counter: int = 0
+  __MAX_STEPS: int = 1000
   __stack: list[int] = []
   __heap: list[ list[int] ] = []
   __json_file = {}
@@ -87,17 +89,27 @@ class Slave:
   def follow_program(self) -> None:
 
     while( self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
+      self.__step_counter += 1
       self.process_node()
+      if self.__step_counter > self.__MAX_STEPS:
+
+        self.analysis_results[jpamb_criteria.INFINITE_LOOP] = 1.
+        self.process_error()
     self.kill_slave()
 
-  def follow_method(self,method_name):
+  def follow_method(self,method_name) -> None:
     
     method_bytecode = self.find_method_bytecode_in_json(self.__json_file,method_name)
     if(not method_bytecode):
       return 
     
     while(self.__instruction_pointer < len(self.__bytecode) and not self.__error_interruption):
+      self.__step_counter += 1
       self.process_node()
+      if self.__step_counter > self.__MAX_STEPS:
+
+        self.analysis_results[jpamb_criteria.INFINITE_LOOP] = 1.
+        self.process_error()
       if self.__error_interruption:
 
         Instruction_printer.print_error(self.__stack, self.__instruction_pointer, self.__heap)
@@ -293,8 +305,12 @@ class Slave:
   def process_array_length(self) -> None:
 
     array_reference: dict = self.__stack.pop()
-    self.__stack.append(array_reference['length'])
-    self.increment_instructions_pointer()
+    if array_reference == None:
+      self.analysis_results[jpamb_criteria.NULL_POINTER] = 1.
+      self.process_error()
+    else:
+      self.__stack.append(array_reference['length'])
+      self.increment_instructions_pointer()
 
 
   def process_increment(self, current_byte) -> None:
@@ -398,7 +414,7 @@ class Slave:
       case jbinary.IF:
         Instruction_printer.print_if(current_byte)
       case jbinary.GO_TO:
-        pass
+        Instruction_printer.print_goto(current_byte)
       case jbinary.GET:
         Instruction_printer.print_get(self.__stack, self.__instruction_pointer)
       case jbinary.INVOKE:

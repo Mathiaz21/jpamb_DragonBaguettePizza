@@ -136,8 +136,9 @@ class Instruction_printer:
     Instruction_printer.show_stack(stack, step_count)
 
 
-  def print_goto(target: int):
+  def print_goto(current_byte):
 
+    target: int = current_byte['target']
     goto_report: str = f'Going to instruction {target}'
     print(goto_report)
 
